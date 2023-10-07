@@ -2,3 +2,24 @@
 .extra-style-button-rigth{
   margin-left: 90%;
 }
+
+.extra-style-div-form{
+  margin-top: 1rem;
+}
+
+.extra-style-button-form{
+  margin-top: 3rem;
+}
+
+.container-form{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.extra-select{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}

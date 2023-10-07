@@ -1,28 +1,27 @@
 from django.db import models
 from django.core.validators import EmailValidator
 from django.contrib.auth.models import User
-import django
-
+from django.utils import timezone
+from .utils import generate_codes
 # Create your models here.
-class MyUser():
-    ...
     
 class Forms(models.Model):
     form_id = models.BigAutoField(primary_key=True)
-    healthy = models.IntegerField()
-    economy = models.IntegerField()
-    job = models.IntegerField()
+    salud = models.IntegerField()
+    economia = models.IntegerField()
+    trabajo = models.IntegerField()
     romance = models.IntegerField()
-    personal_growth = models.IntegerField()
-    friends = models.IntegerField()
-    fun = models.IntegerField()
-    self_image = models.IntegerField()
-    phy_envio = models.IntegerField()
-    date = models.DateField()
+    crecimiento_personal = models.IntegerField()
+    amigos = models.IntegerField()
+    diversion = models.IntegerField()
+    imagen_propia = models.IntegerField()
+    ambiente_fisico = models.IntegerField()
+    date = models.DateTimeField(default=timezone.now)
     user_id = models.ForeignKey(User, on_delete=models.CASCADE)
     
 class Psychologist(models.Model):
     user_id = models.BigAutoField(primary_key=True)
+    code = models.CharField(default=generate_codes())
     clients = models.ManyToManyField(User)
     
 

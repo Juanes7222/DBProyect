@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login, get_user_model
 from .forms import CreateNewUser
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .extra_functions import get_questions, save_answers
+from .extra_functions import get_questions, get_answers
 
 # Create your views here.
 
@@ -12,6 +12,9 @@ def home(request):
     return render(request, "index.html")
 
 def login_user(request):
+    if request.user.is_authenticated:
+        return redirect('dashboard')
+        
     if request.method == 'GET':
         return render(request, 'login.html', {"form": AuthenticationForm})
     else:
@@ -23,16 +26,16 @@ def login_user(request):
         login(request, user)
         return redirect('dashboard')
 
-@login_required
+@login_required(redirect_field_name="login", login_url="/login/")
 def forms(request):
     if request.method == "GET":
         context = {
-            "context": get_questions(),
+            "quests": get_questions(),
             "range": range(1, 11, 1)
             }
         return render(request, "form.html", context)
     if not request.POST.get("exit", False):
-        save_answers(request.POST)
+        get_answers(request.POST, request.user.id)
     return redirect('dashboard')
 
 
@@ -62,7 +65,7 @@ def register(request):
 
     return render(request, 'register.html', data)
 
-@login_required
+@login_required(redirect_field_name="login", login_url="/login/")
 def dashboard(request):
     if request.method == "GET":
         return render(request, "dashboard.html")
@@ -71,5 +74,8 @@ def dashboard(request):
 
 @login_required
 def exit(request):
+    if request.method == "POST":
+        if request.get("exit") == "not":
+            return redirect('dashboard')
     logout(request)
     return redirect('home')

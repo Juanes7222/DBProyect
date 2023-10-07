@@ -13,22 +13,47 @@
     {% comment %} {% comment %} <link rel="stylesheet" href="{% static 'css/style_header.css' %}"> {% endcomment %}
     <link rel="stylesheet" href="{% static 'css/extra_styles.css' %}">
     {% comment %} <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> {% endcomment %}
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous"> 
-    <link href="{% static 'css/bootstrap-grid.css' %}">
-    <link href="{% static 'css/bootstrap-reboot.css' %}">
-    <link href="{% static 'css/bootstrap-utilities.css' %}">
-    <link href="{% static 'css/bootstrap.css' %}">
-    <link href="{% static 'css/bootstrap.rtl.css' %}">
+    {% comment %} <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">  {% endcomment %}
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-grid.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-grid.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-grid.rtl.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-grid.rtl.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-reboot.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-reboot.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-reboot.rtl.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-reboot.rtl.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-utilities.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-utilities.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-utilities.rtl.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap-utilities.rtl.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.rtl.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.rtl.min.css' %}">
 
     {% comment %} <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script> {% endcomment %}
     <script src="https://cdn.jsdelivr.net/npm/tether@2.0.0-beta.5/dist/js/tether.min.js"></script>
     <script src="https://unpkg.com/@popperjs/core@2"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery.min.js' %}"></script>
+    <script src="{% static 'js/popper.min.js' %}"></script>
+
 
 
     <title>WheelOfLife</title>
 </head>
 
 <body>
+  <script src="{% static 'js/scripts.js' %}"></script>
+  <script type="module" src="{% static 'js/base.js' %}"></script>
+  <script src="{% static 'js/bootstrap.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
+  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.esm.js' %}"></script>
+  <script src="{% static 'js/bootstrap.esm.min.js' %}"></script>
+  <script src="{% static 'js/bootstrap.js' %}"></script>
+
   <header class="header sticky sticky--top js-header">
     
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -57,17 +82,6 @@
     </nav>
       
     </header>
-    <script src="{% static 'js/scripts.js' %}"></script>
-    <script src="{% static 'js/popper.min.js' %}"></script>
-    <script type="module" src="{% static 'js/base.js' %}"></script>
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.bundle.js' %}"></script>
-    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.esm.js' %}"></script>
-    <script src="{% static 'js/bootstrap.esm.min.js' %}"></script>
-    <script src="{% static 'js/bootstrap.js' %}"></script>
-    <script src="{% static 'js/jquery.min.js' %}"></script>
 
 {% block content_blank %}
 {% endblock  %}

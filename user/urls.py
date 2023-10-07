@@ -7,7 +7,8 @@ urlpatterns = [
     path("register/", views.register, name="register"),
     path("dashboard/", views.dashboard, name="dashboard"),
     path("exit/", views.exit, name="exit"),
-    # path("form_template/", views.form_template, name="form_template"),
+    path("form_template/", views.forms, name="form_template"),
+    path("exit/", views.exit, name="exit"),
     path("", views.home, name="home"),
     
 ]
