@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content_blank %}
+
+{% for section, quest in quests %}
+
+        <h1>{{section}}</h1>
+        {% for question in quest %}
+            <p>{{question}}</p>
+            {% for i in range %}
+            <div class="form-check form-check-inline">
+                <input class="form-check-input" type="radio" name="{{section}}_{{i}}" id="{{section}}_{{i}}" value={{i}}>
+                <label class="form-check-label" for="{{section}}_{{i}}">
+                  {{i}}
+                </label>
+            </div>
+            {% endfor %}
+        {% endfor %}
+
+{% endfor %}
+<input type="submit">
+
+{% endblock %}
+
+{% comment %} completar el formulario para que solo se puede seleccionar un valor a la vez {% endcomment %}
