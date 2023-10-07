@@ -18,8 +18,15 @@
         {% endfor %}
 
 {% endfor %}
-<input type="submit">
+<button class="btn btn-primary" type="submit">Submit form</button>
 
 {% endblock %}
 
-{% comment %} completar el formulario para que solo se puede seleccionar un valor a la vez {% endcomment %}
+{% comment %} completar el formulario para que solo se puede seleccionar un valor a la vez 
+
+NOta idea: se puede hacer distintos archivos para cada seccion, cada boton de submit redireccionara a la siguiente seccion
+por cada validacion solamente tener guardado en memoria las respuestas en memoria, siendo entonces que hay que pasar las respuestas
+dadas a la sigiente vista
+
+Mantener un boton para cancelar el formulario, entonces se puede hacer que la base para los html de los forms sea el mismo actual form.html
+{% endcomment %}
