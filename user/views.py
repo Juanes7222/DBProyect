@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login, get_user_model
 from .forms import CreateNewUser
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-
+from .extra_functions import get_questions, save_answers
 
 # Create your views here.
 
@@ -18,19 +18,23 @@ def login_user(request):
         user = authenticate(
             request, username=request.POST['username'], password=request.POST['password'])
         if user is None:
-            return render(request, 'login.html', {"form": AuthenticationForm, "error": "Username or password is incorrect."})
+            return render(request, 'login.html', {"form": AuthenticationForm, "error": "Nombre de usuario o contraseña incorrecto"})
 
         login(request, user)
-        return redirect('home')
+        return redirect('dashboard')
 
-
+@login_required
 def forms(request):
-    import json
-    with open(r"C:\Users\juanb\Documents\Programacion\bdproject\user\questions.json", "r", encoding="utf-8") as file:
-        quest = json.load(file)
-    context =  {"quests": quest.items(), "range": range(1, 11, 1)}
-    print(context["quests"])
-    return render(request, "form.html", context)
+    if request.method == "GET":
+        context = {
+            "context": get_questions(),
+            "range": range(1, 11, 1)
+            }
+        return render(request, "form.html", context)
+    if not request.POST.get("exit", False):
+        save_answers(request.POST)
+    return redirect('dashboard')
+
 
 def register(request):
     data = {
