@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Forms
+from .models import Forms, Psychologist
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login, get_user_model
 from .forms import CreateNewUser
@@ -59,6 +59,9 @@ def register(request):
                 if user_type == 1:            
                     return redirect('dashboard')
                 else:
+                    Psychologist.objects.create(
+                        user_id=user.id
+                    )
                     return redirect("dashboard_psi")
         else:
             data['form'] = user_creation_form
@@ -74,8 +77,14 @@ def dashboard(request):
 
 @login_required
 def exit(request):
-    if request.method == "POST":
-        if request.get("exit") == "not":
+    if request.method == "GET":
+        if request.GET.get("exit") == "not":
             return redirect('dashboard')
     logout(request)
     return redirect('home')
+
+def prueba(request):
+    return render(request, "prueba.html")
+
+def forms_views(request):
+    return render(request, "forms_views.html")

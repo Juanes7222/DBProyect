@@ -10,5 +10,7 @@ urlpatterns = [
     path("form_template/", views.forms, name="form_template"),
     path("exit/", views.exit, name="exit"),
     path("", views.home, name="home"),
+    path("prueba/", views.prueba),
+    path("forms_views/", views.forms_views, name="forms_views")
     
 ]

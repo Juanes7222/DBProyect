@@ -21,8 +21,8 @@ class Forms(models.Model):
     
 class Psychologist(models.Model):
     user_id = models.BigAutoField(primary_key=True)
-    code = models.CharField(default=generate_codes())
-    clients = models.ManyToManyField(User)
+    code = models.CharField(max_length=10, default=generate_codes())
+    clients = models.ManyToManyField(User, null=True)
     
 
 #Nota: un usuario puede tener mas de un formulario hecho, y un formulario esta compuesto por el ponderado de cada seccion
