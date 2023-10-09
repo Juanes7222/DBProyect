@@ -34,4 +34,7 @@ def generar_rueda_de_vida():
     imagen_path = './hola.png'
     plt.savefig(imagen_path)
     
-generar_rueda_de_vida()
+# generar_rueda_de_vida()
+
+
+# Nota idea: para generar la rueda se puede simplemente generar circulos (10 por el mayor puntaje) y se va pintando de esa seccion dependiendo de la puntuacion en esa area (ver imagen example1.)

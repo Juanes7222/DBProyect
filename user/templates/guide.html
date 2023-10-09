@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block extend_head %}
+
+{% comment %} <link rel="stylesheet" href="{% static 'css/cover.css' %}"> {% endcomment %}
+
+
+{% endblock extend_head %}
+
+
+{% block content_blank %}
+
+
+<div class="col-lg-8 mx-auto p-4 py-md-5">
+    <header class="d-flex align-items-center pb-3 mb-5 border-bottom">
+      <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-book"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+        <span class="fs-4">Guía</span>
+      </a>
+    </header>
+  
+    <main>
+      <h1>Introduccion</h1>
+      <p class="fs-5 col-md-8">Esta ERS tratara sobre el desarrollo productivo de la rueda de la vida permitiendo al usuario una
+        vista mas clara de si mismo, pudiendo ver gráficamente y de manera sencilla la puntuación
+        en cada una de las áreas (salud, trabajo, amigos, etc.) permitiendo hacer mas de una vez la
+        encuesta para comparar con sus resultados anteriores.
+        Se hará una serie de preguntas las cuales se dividirán en las áreas especificadas más adelante y el usuario que este haciendo la
+        encuesta dará una puntuación del 1 al 10. Cuando termine
+        de responder las preguntas se mostrara de manera gráfica una rueda de la vida con el
+        ponderado de las puntuaciones de las preguntas en cada área de la rueda.<br>
+        La puntuación que se dará en los resultados sera un ponderado de la puntuación
+        especificada en cada una de las preguntas hechas al usuario. Esta sera de 1 a 10, siendo 1
+        considerada la puntuación mas baja y 10 la mas alta. Solo se podrá dar un numero entero
+        como puntuación aunque como el resultado final es un ponderado este podrá ser decimal.
+        Las personas interesadas en registrarse lo puden hacer de dos maneras:
+    </p>
+  
+      <hr class="col-3 col-md-2 mb-5">
+  
+      <div class="row g-5">
+        <div class="col-md-6">
+          <h2>Usuario comun</h2>
+          <p>El usuario común podrá registrarse con su correo electrónico, nombre con en que se quiera identificar y una contraseña. El nombre de usuario
+            servirá como indentificador para poder ingresar a la cuenta una vez creada.
+            Este usuario podrá realizar consultas a sus encuestas anteriores permitiendo
+            comparar sus resultados anteriores con el mas reciente. También podrá ver cada
+            rueda de la vida de manera individual para ver mas detalles.
+            </p>
+        </div>
+  
+        <div class="col-md-6">
+            <h2>Psicólogo</h2>
+            <p>De la misma manera que el usuario común con su correo electrónico, nombre de usuario y una contraseña. Si se registra de esta manera tendrá un poco
+              mas de funcionalidades en torno a lo que es su trabajo. Podrá vincular a sus
+              pacientes para tener acceso a las encuestas y resultados obtenidos en las áreas de la
+              rueda de la vida tanto anteriores (si es que ya estaban registrados) como los nuevos.
+              Tendrá una sección en la que pueda hacer comentarios y observaciones respectivas y
+              pertinentes que crea necesario permitiendo al paciente revisar estos mismos si así lo
+              permite el psicólogo.
+              </p>
+        </div>
+      </div>
+    </main>
+  </div>
+
+{% endblock  %}

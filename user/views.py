@@ -88,3 +88,9 @@ def prueba(request):
 
 def forms_views(request):
     return render(request, "forms_views.html")
+
+def examples(request):
+    return render(request, "examples_img.html")
+
+def guide(request):
+    return render(request, "guide.html")

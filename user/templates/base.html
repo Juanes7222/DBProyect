@@ -31,13 +31,15 @@
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.rtl.css' %}">
     <link rel="stylesheet" href="{% static 'css/bootstrap.rtl.min.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+
+    {% block extend_head %}{% endblock extend_head %}
 
     {% comment %} <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script> {% endcomment %}
     <script src="https://cdn.jsdelivr.net/npm/tether@2.0.0-beta.5/dist/js/tether.min.js"></script>
     <script src="https://unpkg.com/@popperjs/core@2"></script>
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/popper.min.js' %}"></script>
+    <script type="module" src="{% static 'js/jquery.min.js' %}"></script>
+    <script type="module" src="{% static 'js/popper.min.js' %}"></script>
 
     <title>WheelOfLife</title>
 </head>
@@ -98,3 +100,4 @@
 </div>
 
 </body>
+</html>
