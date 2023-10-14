@@ -1,10 +1,7 @@
 from django.db import models
-from django.core.validators import EmailValidator
-from django.contrib.auth.models import User, UserManager, AbstractUser
+from .models_ignore import AbstractUser
 from django.utils import timezone
 from .utils import generate_codes
-from django.contrib.auth.validators import UnicodeUsernameValidator
-from django.core.mail import send_mail
 from django.utils.translation import gettext_lazy as _
 
 
@@ -37,7 +34,7 @@ class Forms(models.Model):
 class Psychologist(models.Model):
     user_id = models.BigAutoField(primary_key=True)
     code = models.CharField(max_length=10, default=generate_codes())
-    clients = models.ManyToManyField(UserBase, null=True)
+    clients = models.ManyToManyField(UserBase)
     
 
 #Nota: un usuario puede tener mas de un formulario hecho, y un formulario esta compuesto por el ponderado de cada seccion
