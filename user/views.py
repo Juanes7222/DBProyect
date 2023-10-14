@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login, get_user_model
 from .forms import CreateNewUser
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .extra_functions import get_questions, get_answers
+from .utils import get_questions, get_answers
 
 # Create your views here.
 

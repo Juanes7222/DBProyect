@@ -1,11 +1,44 @@
 import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
+import json
+from .models import Forms
 
 matplotlib.use('Agg')  # Usa el backend 'Agg' (modo sin GUI)
 
-def generate_color(blank_answers, answers, colors, blank_colors):
-    for b_answer, answer, i in zip(blank_answers, answers, range(len(answers))):
+def get_questions():
+    with open(r"C:\Users\juanb\Documents\Programacion\bdproject\user\questions.json", "r", encoding="utf-8") as file:
+        quest = json.load(file)
+    return quest.items()
+
+def get_answers(answers, user_id):
+    quest = get_questions()
+    score = {}
+    for section, questions in quest:
+        section = section.replace(" ", "_")
+        list_score = []
+        for question in questions:
+            list_score.append(int(answers.get(question)))
+        score[section] = sum(list_score) // len(list_score)
+    score["user_id_id"] = user_id
+    form_id = save_answers(score)
+    path = generate_image_path(user_id, form_id)
+    generate_wheel(answers.values(), path) 
+    
+def save_answers(answers):
+    
+    form = Forms.objects.create(
+        **answers
+    )
+    return form.form_id
+    
+def generate_image_path(user_id, form_id):
+    path = "./static/img/wheels"
+    image_path = f"{path}/{user_id}_{form_id}"
+    return image_path
+
+def generate_color(blank_answers, colors, blank_colors):
+    for i, b_answer in enumerate(blank_answers):
         if b_answer == 0:
             blank_colors[i] = colors[i]
     blank_answers = map(lambda x: x+1, blank_answers)
@@ -41,7 +74,7 @@ def generate_wheel(answers, image_path):
     ax.text(-1*center_x-0.95, center_y, "10", horizontalalignment='center', verticalalignment='center', fontsize=13)
 
     for i in range(num_inner_circles):
-        blank_answers = generate_color(blank_answers, answers, colores, blank_colors)
+        blank_answers = generate_color(blank_answers, colores, blank_colors)
         ax.pie(sizes, startangle=90, radius=inner_radius, colors=blank_colors,
             center=(center_x, center_y), wedgeprops={'edgecolor': border_color, 'linewidth': 0.5})
         ax.text(center_x, center_y+(i*0.1)+0.05, str(i+1), horizontalalignment='center', verticalalignment='center', fontsize=13)
@@ -52,7 +85,7 @@ def generate_wheel(answers, image_path):
 
     plt.savefig(image_path, dpi=600)
 # plt.show()
-generate_wheel([1, 3, 5, 6, 5, 3, 7, 8, 4], "./hola.png")
+# generate_wheel([1, 3, 5, 6, 5, 3, 7, 8, 4], "./hola.png")
 # generar_rueda_de_vida()
 
 
