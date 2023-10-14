@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
 import json
+import os
 from .models import Forms
 
 matplotlib.use('Agg')  # Usa el backend 'Agg' (modo sin GUI)
@@ -10,6 +11,20 @@ def get_questions():
     with open(r"C:\Users\juanb\Documents\Programacion\bdproject\user\questions.json", "r", encoding="utf-8") as file:
         quest = json.load(file)
     return quest.items()
+
+def form_manager(answers, user_id):
+    score = get_answers(answers, user_id)
+    form_id = save_answers(score)
+    path = generate_image_path(user_id, form_id)
+    generate_wheel(score.values(), path) 
+
+def create_userfolder(user_id):
+    path = "./static/img/wheels"
+    new_path = os.path.join(path, str(user_id))
+    
+    if not os.path.exists(new_path):
+        os.makedirs(new_path)
+    return new_path
 
 def get_answers(answers, user_id):
     quest = get_questions()
@@ -21,9 +36,8 @@ def get_answers(answers, user_id):
             list_score.append(int(answers.get(question)))
         score[section] = sum(list_score) // len(list_score)
     score["user_id_id"] = user_id
-    form_id = save_answers(score)
-    path = generate_image_path(user_id, form_id)
-    generate_wheel(answers.values(), path) 
+    return score
+    
     
 def save_answers(answers):
     
@@ -33,8 +47,9 @@ def save_answers(answers):
     return form.form_id
     
 def generate_image_path(user_id, form_id):
-    path = "./static/img/wheels"
-    image_path = f"{path}/{user_id}_{form_id}"
+    path = create_userfolder(user_id)
+    specific_name = f"{user_id}_{form_id}"
+    image_path = f"{path}/{specific_name}.png"
     return image_path
 
 def generate_color(blank_answers, colors, blank_colors):
@@ -50,7 +65,7 @@ def generate_wheel(answers, image_path):
     # Datos para el diagrama circular exterior
     labels = ['Salud', 'Economia', 'Trabajo', 'Romance', 'Crecimiento personal', 'Amigos', 'Diversion', 'Imagen propia', "Ambiente físico"]
     length_labels = len(labels)
-    sizes = np.ones(length_labels)
+    sizes = [1, 1, 1, 1, 1, 1, 1, 1, 1]
     blank_answers = list(map(lambda x: x-10, answers))
 
     fig, ax = plt.subplots(figsize=(10, 10))

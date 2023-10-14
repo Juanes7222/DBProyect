@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from .models import Forms, Psychologist
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout, authenticate, login, get_user_model
+from django.contrib.auth import logout, authenticate, login
 from .forms import CreateNewUser
-from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
-from .utils import get_questions, get_answers
+from django.contrib.auth.forms import AuthenticationForm
+from .utils import get_questions, form_manager
 
 # Create your views here.
 
@@ -35,7 +35,7 @@ def forms(request):
             }
         return render(request, "form.html", context)
     if not request.POST.get("exit", False):
-        get_answers(request.POST, request.user.id)
+        form_manager(request.POST, request.user.id)
     return redirect('dashboard')
 
 

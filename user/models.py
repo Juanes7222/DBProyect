@@ -1,7 +1,7 @@
 from django.db import models
 from .models_ignore import AbstractUser
 from django.utils import timezone
-from .utils import generate_codes
+from .extra_functions import generate_codes
 from django.utils.translation import gettext_lazy as _
 
 
