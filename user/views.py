@@ -24,7 +24,10 @@ def login_user(request):
             return render(request, 'login.html', {"form": AuthenticationForm, "error": "Nombre de usuario o contraseña incorrecto"})
 
         login(request, user)
-        return redirect('dashboard')
+        if request.user.user_type == 1:
+            return redirect('dashboard')
+        else:
+            return redirect("psi-dashboard")
 
 @login_required(redirect_field_name="login", login_url="/login/")
 def forms(request):
@@ -62,7 +65,7 @@ def register(request):
                     Psychologist.objects.create(
                         user_id=user.id
                     )
-                    return redirect("dashboard_psi")
+                    return redirect("psi-dashboard")
         else:
             data['form'] = user_creation_form
 
@@ -70,8 +73,19 @@ def register(request):
 
 @login_required(redirect_field_name="login", login_url="/login/")
 def dashboard(request):
+    if request.user.user_type == 2:
+        return redirect("psi-dashboard")
     if request.method == "GET":
         return render(request, "dashboard.html")
+    if request.POST.get("exit", False):
+        return exit(request)
+
+@login_required(redirect_field_name="login", login_url="/login/")
+def psi_dashboard(request):
+    if request.user.user_type == 1:
+        return redirect("dashboard")
+    if request.method == "GET":
+        return render(request, "dashboard_psi.html")
     if request.POST.get("exit", False):
         return exit(request)
 

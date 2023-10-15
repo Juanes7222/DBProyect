@@ -6,6 +6,7 @@ urlpatterns = [
     path("form/", views.forms, name="form"),
     path("register/", views.register, name="register"),
     path("dashboard/", views.dashboard, name="dashboard"),
+    path("psi-dashboard/", views.psi_dashboard, name="psi-dashboard"),
     path("exit/", views.exit, name="exit"),
     path("form_template/", views.forms, name="form_template"),
     path("exit/", views.exit, name="exit"),
