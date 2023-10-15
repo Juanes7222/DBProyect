@@ -1,10 +1,8 @@
 from django.db import models
 from .models_ignore import AbstractUser
 from django.utils import timezone
-from .extra_functions import generate_codes
+from django.utils.crypto import get_random_string
 from django.utils.translation import gettext_lazy as _
-
-
 
 # Create your models here.
 
@@ -33,7 +31,7 @@ class Forms(models.Model):
     
 class Psychologist(models.Model):
     user_id = models.BigAutoField(primary_key=True)
-    code = models.CharField(max_length=10, default=generate_codes())
+    code = models.CharField(max_length=10, default=get_random_string(length=10))
     clients = models.ManyToManyField(UserBase)
     
 

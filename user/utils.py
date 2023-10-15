@@ -8,7 +8,8 @@ from .models import Forms
 matplotlib.use('Agg')  # Usa el backend 'Agg' (modo sin GUI)
 
 def get_questions():
-    with open(r"C:\Users\juanb\Documents\Programacion\bdproject\user\questions.json", "r", encoding="utf-8") as file:
+    
+    with open(os.path.join("user\static\questions.json"), "r", encoding="utf-8") as file:
         quest = json.load(file)
     return quest.items()
 
@@ -16,10 +17,12 @@ def form_manager(answers, user_id):
     score = get_answers(answers, user_id)
     form_id = save_answers(score)
     path = generate_image_path(user_id, form_id)
-    generate_wheel(score.values(), path) 
+    values = list(score.values())
+    values.pop()
+    generate_wheel(values, path) 
 
 def create_userfolder(user_id):
-    path = "./static/img/wheels"
+    path = "user/static/img/wheels"
     new_path = os.path.join(path, str(user_id))
     
     if not os.path.exists(new_path):
@@ -40,7 +43,6 @@ def get_answers(answers, user_id):
     
     
 def save_answers(answers):
-    
     form = Forms.objects.create(
         **answers
     )
@@ -53,7 +55,7 @@ def generate_image_path(user_id, form_id):
     return image_path
 
 def generate_color(blank_answers, colors, blank_colors):
-    for i, b_answer in enumerate(blank_answers):
+    for i, b_answer in enumerate(blank_answers, 0):
         if b_answer == 0:
             blank_colors[i] = colors[i]
     blank_answers = map(lambda x: x+1, blank_answers)
@@ -69,7 +71,6 @@ def generate_wheel(answers, image_path):
     blank_answers = list(map(lambda x: x-10, answers))
 
     fig, ax = plt.subplots(figsize=(10, 10))
-
     # Número de círculos internos
     num_inner_circles = 10
 
