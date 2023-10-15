@@ -4,5 +4,14 @@
 
 {% block content %}
 
+{% for file in files %}
+
+    <img src="{% static file %}" class="img-fluid" alt="wheel of life">
+{% endfor %}
+
 
 {% endblock content %}
+
+{% block extend_scripts %}
+<script src="{% static "js/script_form.js" %}"></script>
+{% endblock extend_scripts %}   

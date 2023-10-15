@@ -31,7 +31,7 @@ class AbstractUser(AbstractBaseUser, PermissionsMixin):
     )
     first_name = models.CharField(_("Nombre"), max_length=150, blank=True)
     last_name = models.CharField(_("Apellido"), max_length=150, blank=True)
-    email = models.EmailField(_("Correo electronico"), blank=True)
+    email = models.EmailField(_("Correo electronico"), null=False)
     is_staff = models.BooleanField(
         _("staff status"),
         default=False,

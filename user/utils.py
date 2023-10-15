@@ -4,6 +4,7 @@ import numpy as np
 import json
 import os
 from .models import Forms
+from datetime import date
 
 matplotlib.use('Agg')  # Usa el backend 'Agg' (modo sin GUI)
 
@@ -12,6 +13,14 @@ def get_questions():
     with open(os.path.join("user\static\questions.json"), "r", encoding="utf-8") as file:
         quest = json.load(file)
     return quest.items()
+
+def get_files_folder(user_id, date=None):
+    path = "user/static/img/wheels"
+    try:
+        files = os.listdir(f"{path}/{user_id}") 
+        return files
+    except FileNotFoundError:
+        return None
 
 def form_manager(answers, user_id):
     score = get_answers(answers, user_id)
@@ -50,7 +59,7 @@ def save_answers(answers):
     
 def generate_image_path(user_id, form_id):
     path = create_userfolder(user_id)
-    specific_name = f"{user_id}_{form_id}"
+    specific_name = f"{user_id}_{form_id}_{date.today()}"
     image_path = f"{path}/{specific_name}.png"
     return image_path
 

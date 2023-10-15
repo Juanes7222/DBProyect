@@ -4,7 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
 from .forms import CreateNewUser
 from django.contrib.auth.forms import AuthenticationForm
-from .utils import get_questions, form_manager
+from .utils import get_questions, form_manager, get_files_folder
 
 # Create your views here.
 
@@ -76,7 +76,12 @@ def dashboard(request):
     if request.user.user_type == 2:
         return redirect("psi-dashboard")
     if request.method == "GET":
-        return render(request, "dashboard.html")
+        context = {
+            "id": request.user.id,
+            "username": request.user.username,
+            "name": request.user.first_name,
+        }
+        return render(request, "dashboard.html", context=context)
     if request.POST.get("exit", False):
         return exit(request)
 
@@ -101,7 +106,14 @@ def prueba(request):
     return render(request, "prueba.html")
 
 def forms_views(request):
-    return render(request, "forms_views.html")
+    if request.method == "POST":
+        date = request.POST.get("date")
+        get_files_folder()
+    files = get_files_folder(request.user.id)
+    context = {
+        "files": map(lambda x: f"img/wheels/{request.user.id}/{x}", files),
+    }
+    return render(request, "forms_views.html", context)
 
 def examples(request):
     return render(request, "examples_img.html")
