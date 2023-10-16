@@ -3,12 +3,86 @@
 {% load static %}
 
 {% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2">Formularios</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+      <div class="btn-group me-2">
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+            Exportar
+          </button>
+          <form>
+            {% csrf_token %}
+          <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Modal title</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  ¿Deseas descargar todas las Ruedas de la vida?
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#select-date">Seleccionar una fecha</button>
+                  <a id="all" href="{% url "download-zip" %}" class="btn btn-primary" data-bs-dismiss="modal">Si!</a>
+                </div>
+              </div>
+            </div>
+          </div>
 
-{% for file in files %}
+          <div class="modal fade" id="select-date" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h1 class="modal-title fs-5" id="exampleModalLabel">Selecciona una fecha</h1>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  .<div class="input-group mb-3">
+                    <input id="value-date" type="date" class="form-control" aria-label="Fecha">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button id="date" type="button" class="btn btn-primary" data-bs-dismiss="modal">Guardar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
 
-    <img src="{% static file %}" class="img-fluid" alt="wheel of life">
+        {% comment %} <div class="modal-body">
+            <h2 class="fs-5">Popover in a modal</h2>
+            <p>This <button class="btn btn-secondary" data-bs-toggle="popover" title="Popover title" data-bs-content="Popover body content is set in this attribute.">button</button> triggers a popover on click.</p>
+            <hr>
+            <h2 class="fs-5">Tooltips in a modal</h2>
+            <p><a href="#" data-bs-toggle="tooltip" title="Tooltip">This link</a> and <a href="#" data-bs-toggle="tooltip" title="Tooltip">that link</a> have tooltips on hover.</p>
+          </div> {% endcomment %}
+        {% comment %} <button type="button" class="btn btn-sm btn-outline-secondary">Share</button>
+        <button type="button" class="btn btn-sm btn-outline-secondary">Exportar</button> {% endcomment %}
+      </div>
+      <form>
+        {% csrf_token %}
+        <select id="select-view" class="form-select btn-outline-secondary" aria-label="Default select example">
+          <option value="1" selected>Esta semana</option>
+          <option value="2">1 mes</option>
+          <option value="3">2 meses</option>
+          <option value="4">Todos</option>
+        </select>
+      </form>
+
+    </div>
+</div>
+<div id="img-container" class="text-center">
+{% for file, date in zip %}
+<div class="alert alert-info" role="alert">
+    Fecha: {{date}}
+</div>
+    <img src="/{{file}}" class="img-fluid rounded" alt="wheel of life">
+
 {% endfor %}
-
+</div>
 
 {% endblock content %}
 

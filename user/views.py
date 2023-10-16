@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from .models import Forms, Psychologist
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
 from .forms import CreateNewUser
 from django.contrib.auth.forms import AuthenticationForm
-from .utils import get_questions, form_manager, get_files_folder
-
+from .utils import get_questions, form_manager, get_files_folder, generate_path_img_files, download_zip
+from .decorators import backend_required
 # Create your views here.
 
 def home(request):
@@ -76,11 +77,14 @@ def dashboard(request):
     if request.user.user_type == 2:
         return redirect("psi-dashboard")
     if request.method == "GET":
+        form = Forms.objects.filter(user_id=request.user.id)
         context = {
             "id": request.user.id,
             "username": request.user.username,
             "name": request.user.first_name,
+            "any_form": form.exists(),
         }
+        print(context)
         return render(request, "dashboard.html", context=context)
     if request.POST.get("exit", False):
         return exit(request)
@@ -105,14 +109,25 @@ def exit(request):
 def prueba(request):
     return render(request, "prueba.html")
 
-def forms_views(request):
-    if request.method == "POST":
-        date = request.POST.get("date")
-        get_files_folder()
-    files = get_files_folder(request.user.id)
+@login_required(redirect_field_name="login", login_url="/login/")
+def forms_views(request):        
+    #obtiene los datos del front
+    date = request.POST.get("date")
+    print(f"{date= }")
+    #procesa los datos
+    files, dates = get_files_folder(request.user.id, date)
     context = {
-        "files": map(lambda x: f"img/wheels/{request.user.id}/{x}", files),
+        "dates": dates
     }
+    selected_files = generate_path_img_files(request.user.id, files)
+    context["files"] = selected_files
+    
+    print(context)
+    
+    if request.method == "POST":
+        return JsonResponse(context)
+    
+    context["zip"] = zip(selected_files, dates)
     return render(request, "forms_views.html", context)
 
 def examples(request):
@@ -120,3 +135,9 @@ def examples(request):
 
 def guide(request):
     return render(request, "guide.html")
+
+@login_required
+def view_download_zip(request):
+    date = request.POST.get("date")
+    return download_zip(request.user.id, date)
+    

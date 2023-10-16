@@ -15,4 +15,5 @@ urlpatterns = [
     path("forms_views/", views.forms_views, name="forms_views"),
     path("examples/", views.examples, name="examples"),
     path("guide/", views.guide, name="guide"),
+    path("forms_views/download_wheels/", views.view_download_zip, name="download-zip")
 ]

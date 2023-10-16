@@ -3,10 +3,20 @@ import matplotlib
 import numpy as np
 import json
 import os
+import locale
+import zipfile
+import io
 from .models import Forms
-from datetime import date
+from datetime import date, timedelta, datetime
+from WheelofLife import settings
+from django.http import FileResponse, HttpResponse
 
+
+locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
 matplotlib.use('Agg')  # Usa el backend 'Agg' (modo sin GUI)
+media_directory = settings.MEDIA_ROOT
+wheels_path = "wheels"
+
 
 def get_questions():
     
@@ -14,11 +24,43 @@ def get_questions():
         quest = json.load(file)
     return quest.items()
 
-def get_files_folder(user_id, date=None):
-    path = "user/static/img/wheels"
+def generate_path_img_files(user_id, files, __path=f"static/img/media_users/{wheels_path}"):
+    files = list(map(lambda x: os.path.join(__path, f"{user_id}/{x}"), files))
+    return files
+
+def get_date_file(files):
+    dates = []
+    for file in files:
+        file_date = date.fromisoformat(file.split("_")[-1][:-4])
+        dates.append(file_date.strftime("%A, %d de %B de %Y"))
+    return dates
+
+def select_files(files: list[str], date):
+    dates = []
+    selected_files = []
+    for file in files:
+        file_date = date.fromisoformat(file.split("_")[-1][:-4])
+        if  file_date >= date:
+            selected_files.append(file)
+            dates.append(file_date.strftime("%A, %d de %B de %Y"))
+    return selected_files, dates
+
+def get_files_folder(user_id, prov_date=None):
     try:
-        files = os.listdir(f"{path}/{user_id}") 
-        return files
+        path = f"{media_directory}/{wheels_path}/{user_id}"
+        files = os.listdir(path)
+        if prov_date == "all":
+            return files, get_date_file(files)
+        
+        elif not prov_date:
+            prov_date = date.today()
+            prov_date -= timedelta(weeks=1)
+        
+        else:
+            prov_date = date.fromisoformat(prov_date.split("T")[0])
+            
+        selected_files, dates = select_files(files, prov_date)
+        return selected_files, dates
     except FileNotFoundError:
         return None
 
@@ -31,8 +73,7 @@ def form_manager(answers, user_id):
     generate_wheel(values, path) 
 
 def create_userfolder(user_id):
-    path = "user/static/img/wheels"
-    new_path = os.path.join(path, str(user_id))
+    new_path = os.path.join(media_directory, wheels_path, str(user_id))
     
     if not os.path.exists(new_path):
         os.makedirs(new_path)
@@ -109,9 +150,23 @@ def generate_wheel(answers, image_path):
         inner_radius -= 0.1
 
     plt.savefig(image_path, dpi=600)
-# plt.show()
-# generate_wheel([1, 3, 5, 6, 5, 3, 7, 8, 4], "./hola.png")
-# generar_rueda_de_vida()
+    
+def download_zip(user_id, since_date):
+    # Crear un objeto ZIP en memoria
+    buffer = io.BytesIO()
+    files = get_files_folder(user_id, since_date)[0]
+    files = generate_path_img_files(user_id, files, f"{media_directory}/{wheels_path}")
+    with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED) as zipf:
+        # Agregar archivos al archivo ZIP
+        for file in files:
+            # El primer argumento es la ruta del archivo real, el segundo es la ruta dentro del ZIP
+            zipf.write(file, os.path.basename(file))
 
+    print(buffer)
+    # Configurar la respuesta HTTP
+    response = HttpResponse(buffer, content_type='application/zip')
+    response['Content-Disposition'] = f'attachment; filename={user_id}_{date.today().strftime("%Y-%m-%d")}.zip'
 
-# Nota idea: para generar la rueda se puede simplemente generar circulos (10 por el mayor puntaje) y se va pintando de esa seccion dependiendo de la puntuacion en esa area (ver imagen example1.)
+    return response
+
+#Hallar el error en esta funcion
