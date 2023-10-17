@@ -7,6 +7,21 @@
 
 let csrfToken = $("input[name='csrfmiddlewaretoken']").val();
 
+// import fetch from 'fetch'
+
+// // Descarga el archivo ZIP
+// fetch('/backend/generate_zip').then(response => {
+//     // Obtiene el archivo ZIP como un objeto Blob
+//     const blob = response.blob()
+
+//     // Descarga el archivo ZIP
+//     const url = window.URL.createObjectURL(blob)
+//     const a = document.createElement('a')
+//     a.href = url
+//     a.download = 'archivo.zip'
+//     a.click()
+// })
+
 function reloadPage(files, dates){
     let imgContainer = document.getElementById("img-container")
     imgContainer.innerHTML = ""
@@ -68,20 +83,62 @@ $(document).ready(function() {
         });
     });
 
+    // $("#all").click(function() {
+    //     // Realizar una solicitud AJAX al backend
+    //     $.ajax({
+    //         url: "download_wheels/",
+    //         method: "GET",
+    //         dataType: "blob",
+    //         data: {
+    //             // Datos que deseas enviar al backend
+    //             csrfmiddlewaretoken: csrfToken,
+    //             date: "all"
+    //         },
+    //         headers: {
+    //             // Especifica el tipo de archivo MIME en el encabezado `Content-Type`
+    //             "Content-Type": "application/zip"
+    //         },
+    //         success: function(data) {
+    //             let blob = new Blob([data]);
+    //             let url = window.URL.createObjectURL(blob);
+    //             let link = document.createElement('a');
+    //             link.style = "none"
+    //             link.href = url;
+    //             link.download = 'archivo.zip'; // Nombre del archivo ZIP
+    
+    //             // Simula un clic en el enlace para iniciar la descarga
+    //             link.click();
+    //             window.URL.revokeObjectURL(url);
+    
+    //         },
+    //         error: function(xhr, errmsg, err) {
+    //             console.log("Error:", errmsg, "err: ", err, "xhr: ", xhr);
+    //         }
+    //     });
+    // });
+
     $("#all").click(function() {
         // Realizar una solicitud AJAX al backend
         $.ajax({
             url: "download_wheels/",
-            method: "POST",
+            method: "GET",
+            datatype: "blob",
             data: {
                 // Datos que deseas enviar al backend
                 csrfmiddlewaretoken: csrfToken,
                 date: "all"
             },
-            success: function(response) {
-                // Manejar la respuesta del backend
-                console.log("Respuesta del servidor:", response);
-                // reloadPage(response["files"], response["dates"]);
+            success: function(data) {
+                let blob = new Blob([data], { type: 'application/zip' });
+                let url = window.URL.createObjectURL(blob);
+                let link = document.createElement('a');
+                link.style = "none"
+                link.href = url;
+                link.download = 'archivo.zip'; // Nombre del archivo ZIP
+
+                // Simula un clic en el enlace para iniciar la descarga
+                link.click();
+                window.URL.revokeObjectURL(url);
 
             },
             error: function(xhr, errmsg, err) {
@@ -96,16 +153,29 @@ $(document).ready(function() {
 
         $.ajax({
             url: "download_wheels/",
-            method: "POST",
+            method: "GET",
+            datatype: "arraybuffer",
             data: {
                 // Datos que deseas enviar al backend
                 csrfmiddlewaretoken: csrfToken,
                 date: date.value
             },
-            success: function(response) {
+            success: function(data) {
                 // Manejar la respuesta del backend
-                console.log("Respuesta del servidor:", response);
+                // console.log("Respuesta del servidor:", data);
                 // reloadPage(response["files"], response["dates"]);
+                // Manejar la respuesta del backend aquí
+                // Descargar el archivo ZIP
+                let blob = new Blob([data], { type: 'application/zip' });
+                let url = window.URL.createObjectURL(blob);
+                let link = document.createElement('a');
+                link.style = "none"
+                link.href = url;
+                link.download = 'archivo.zip'; // Nombre del archivo ZIP
+
+                // Simula un clic en el enlace para iniciar la descarga
+                link.click();
+                window.URL.revokeObjectURL(url);
 
             },
             error: function(xhr, errmsg, err) {

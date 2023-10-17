@@ -28,6 +28,14 @@ def generate_path_img_files(user_id, files, __path=f"static/img/media_users/{whe
     files = list(map(lambda x: os.path.join(__path, f"{user_id}/{x}"), files))
     return files
 
+def path_normalize(files):
+    new_path = list(map(lambda x: os.path.normpath(x), files))
+    return new_path
+
+def abs_path(files):
+    new_path = list(map(lambda x: os.path.abspath(x), files))
+    return new_path
+
 def get_date_file(files):
     dates = []
     for file in files:
@@ -156,17 +164,57 @@ def download_zip(user_id, since_date):
     buffer = io.BytesIO()
     files = get_files_folder(user_id, since_date)[0]
     files = generate_path_img_files(user_id, files, f"{media_directory}/{wheels_path}")
-    with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED) as zipf:
+    files = abs_path(files)
+    files = path_normalize(files)
+    # print(f"{files= }")
+    with zipfile.ZipFile(buffer, 'a', zipfile.ZIP_DEFLATED) as zipf:
         # Agregar archivos al archivo ZIP
         for file in files:
             # El primer argumento es la ruta del archivo real, el segundo es la ruta dentro del ZIP
+            print(f"path: {os.path.basename(file)}")
             zipf.write(file, os.path.basename(file))
 
-    print(buffer)
+    buffer.seek(0)
     # Configurar la respuesta HTTP
-    response = HttpResponse(buffer, content_type='application/zip')
-    response['Content-Disposition'] = f'attachment; filename={user_id}_{date.today().strftime("%Y-%m-%d")}.zip'
-
+    response = HttpResponse(buffer.getvalue(), content_type='application/zip')
+    file_name = f"{user_id}_{date.today().strftime('%Y-%m-%d')}.zip"  
+    response['Content-Disposition'] = f'attachment; filename={file_name}'
     return response
 
-#Hallar el error en esta funcion
+def prueba():
+    files = get_files_folder("1", "all")[0]
+    files = generate_path_img_files("1", files, f"{media_directory}/{wheels_path}")
+    files = abs_path(files)
+    files = path_normalize(files)
+    with zipfile.ZipFile('spam.zip', 'x') as myzip:
+        for file in files:
+            # El primer argumento es la ruta del archivo real, el segundo es la ruta dentro del ZIP
+            print(f"path: {os.path.basename(file)}")
+            myzip.write(file, os.path.basename(file))
+
+prueba()
+# def download_zip(user_id, since_date):
+#     # Crea un objeto ZipFile
+#     zip_file = zipfile.ZipFile()
+#     files = get_files_folder(user_id, since_date)[0]
+#     files = generate_path_img_files(user_id, files, f"{media_directory}/{wheels_path}")
+#     files = abs_path(files)
+#     files = path_normalize(files)
+#     # Agrega archivos al archivo ZIP
+#     for file in files:
+#         print(os.path.basename(file))
+#         zip_file.write(file, os.path.basename(file))
+
+#     # Obtiene el archivo ZIP como un objeto BytesIO
+#     buffer = io.BytesIO()
+#     zip_file.writestr(buffer, 'archivo.zip')
+#     zip_file.close()
+
+#     # Devuelve el archivo ZIP como un objeto HttpResponse
+#     response = HttpResponse(
+#         buffer.getvalue(),
+#         content_type='application/zip',
+#         content_disposition='attachment; filename=archivo.zip'
+#     )
+    
+#     return response
