@@ -117,71 +117,71 @@ $(document).ready(function() {
     //     });
     // });
 
-    $("#all").click(function() {
-        // Realizar una solicitud AJAX al backend
-        $.ajax({
-            url: "download_wheels/",
-            method: "GET",
-            datatype: "blob",
-            data: {
-                // Datos que deseas enviar al backend
-                csrfmiddlewaretoken: csrfToken,
-                date: "all"
-            },
-            success: function(data) {
-                let blob = new Blob([data], { type: 'application/zip' });
-                let url = window.URL.createObjectURL(blob);
-                let link = document.createElement('a');
-                link.style = "none"
-                link.href = url;
-                link.download = 'archivo.zip'; // Nombre del archivo ZIP
+    // $("#all").click(function() {
+    //     // Realizar una solicitud AJAX al backend
+    //     $.ajax({
+    //         url: "download_wheels/",
+    //         method: "GET",
+    //         datatype: "blob",
+    //         data: {
+    //             // Datos que deseas enviar al backend
+    //             csrfmiddlewaretoken: csrfToken,
+    //             date: "all"
+    //         },
+    //         success: function(data) {
+    //             let blob = new Blob([data], { type: 'application/zip' });
+    //             let url = window.URL.createObjectURL(blob);
+    //             let link = document.createElement('a');
+    //             link.style = "none"
+    //             link.href = url;
+    //             link.download = 'archivo.zip'; // Nombre del archivo ZIP
 
-                // Simula un clic en el enlace para iniciar la descarga
-                link.click();
-                window.URL.revokeObjectURL(url);
+    //             // Simula un clic en el enlace para iniciar la descarga
+    //             link.click();
+    //             window.URL.revokeObjectURL(url);
 
-            },
-            error: function(xhr, errmsg, err) {
-                console.log("Error:", errmsg, "err: ", err, "xhr: ", xhr);
-            }
-        });
-    });
+    //         },
+    //         error: function(xhr, errmsg, err) {
+    //             console.log("Error:", errmsg, "err: ", err, "xhr: ", xhr);
+    //         }
+    //     });
+    // });
 
-    $("#date").click(function() {
-        // Realizar una solicitud AJAX al backend
-        let date = document.getElementById("value-date").value
+    // $("#date").click(function() {
+    //     // Realizar una solicitud AJAX al backend
+    //     let date = document.getElementById("value-date").value
 
-        $.ajax({
-            url: "download_wheels/",
-            method: "GET",
-            datatype: "arraybuffer",
-            data: {
-                // Datos que deseas enviar al backend
-                csrfmiddlewaretoken: csrfToken,
-                date: date.value
-            },
-            success: function(data) {
-                // Manejar la respuesta del backend
-                // console.log("Respuesta del servidor:", data);
-                // reloadPage(response["files"], response["dates"]);
-                // Manejar la respuesta del backend aquí
-                // Descargar el archivo ZIP
-                let blob = new Blob([data], { type: 'application/zip' });
-                let url = window.URL.createObjectURL(blob);
-                let link = document.createElement('a');
-                link.style = "none"
-                link.href = url;
-                link.download = 'archivo.zip'; // Nombre del archivo ZIP
+    //     $.ajax({
+    //         url: "download_wheels/",
+    //         method: "GET",
+    //         datatype: "arraybuffer",
+    //         data: {
+    //             // Datos que deseas enviar al backend
+    //             csrfmiddlewaretoken: csrfToken,
+    //             date: date.value
+    //         },
+    //         success: function(data) {
+    //             // Manejar la respuesta del backend
+    //             // console.log("Respuesta del servidor:", data);
+    //             // reloadPage(response["files"], response["dates"]);
+    //             // Manejar la respuesta del backend aquí
+    //             // Descargar el archivo ZIP
+    //             let blob = new Blob([data], { type: 'application/zip' });
+    //             let url = window.URL.createObjectURL(blob);
+    //             let link = document.createElement('a');
+    //             link.style = "none"
+    //             link.href = url;
+    //             link.download = 'archivo.zip'; // Nombre del archivo ZIP
 
-                // Simula un clic en el enlace para iniciar la descarga
-                link.click();
-                window.URL.revokeObjectURL(url);
+    //             // Simula un clic en el enlace para iniciar la descarga
+    //             link.click();
+    //             window.URL.revokeObjectURL(url);
 
-            },
-            error: function(xhr, errmsg, err) {
-                console.log("Error:", errmsg, "err: ", err, "xhr: ", xhr);
-            }
-        });
-    });
+    //         },
+    //         error: function(xhr, errmsg, err) {
+    //             console.log("Error:", errmsg, "err: ", err, "xhr: ", xhr);
+    //         }
+    //     });
+    // });
 });
 

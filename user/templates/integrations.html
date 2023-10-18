@@ -1,0 +1,98 @@
+{% extends "base_dashboard.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<div class="alert alert-success" role="alert">
+    <h4 class="alert-heading">Nota</h4>
+    <p>Aquí puedes buscar a tu psicólogo (si está registrado)</p>
+    <hr>
+    <p class="mb-0">Ingresa en el campo de abajo el nombre de usuario</p>
+  </div>
+
+<form method="post" class="card p-2">
+    {% csrf_token %}
+    <div class="input-group">
+      <input name="input" type="text" class="form-control" placeholder="Buscar">
+      <button type="submit" class="btn btn-secondary">Buscar</button>
+    </div>
+  </form>
+
+{% if none %}
+<div class="alert alert-warning" role="alert">
+    Este usuario no existe o no es psicólogo
+</div>
+
+{% elif  not post%} 
+<div id="cont" class="d-flex justify-content-center align-items-center flex-column gap-3">
+<h2 style="margin-top: 2rem">Resultados de Búsqueda</h2>
+
+<div class="card mb-3" style="margin-top: 2rem; max-width: 540px;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        {% comment %} <img src="..." class="img-fluid rounded-start" alt="..."> {% endcomment %}
+        <svg class="img-fluid rounded-start" xmlns="http://www.w3.org/2000/svg" width="180" height="180" fill="currentColor" class="bi bi-person-badge-fill" viewBox="0 0 16 16">
+            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm4.5 0a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zM8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm5 2.755C12.146 12.825 10.623 12 8 12s-4.146.826-5 1.755V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-.245z"/>
+          </svg>
+      </div>
+      <div class="col-md-8 text-center" style="margin-top: 2rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{name.title}} {{last_name.title}}</h5>
+          <p class="card-text">Email: <a href="mailto:{{email}}">{{email}}</a></p>
+          <button id="integrate" name="integrate" type="submit" class="btn btn-primary">Integrarse</button>
+          <p class="card-text"><small class="text-body-secondary">Se unió: {{since}}</small></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endif %}
+
+
+
+{% endblock content %}
+
+{% block extend_scripts %}
+<script>
+    let csrfToken = $("input[name='csrfmiddlewaretoken']").val();
+
+    $(document).ready(function() {
+        $("#integrate").click(function() {
+            // Realizar una solicitud AJAX al backend
+            let userId = {{ user_id }}
+            let psiId = {{ psi_id }}
+            console.log(userId, psiId)
+            $.ajax({
+                url: "integrate/",
+                method: "POST",
+                data: {
+                    // Datos que deseas enviar al backend
+                    csrfmiddlewaretoken: csrfToken,
+                    user_id: userId,
+                    psi_id: psiId 
+                },
+                success: function(response) {
+                    // Manejar la respuesta del backend
+                    console.log("Respuesta del servidor:", response);
+                    let cont = document.getElementById("cont")
+                    cont.innerHTML = ""
+                    let newElement = document.createElement("h2")
+                    newElement.setAttribute("class", "alert alert-success")
+                    newElement.setAttribute("role", "alert")
+                    newElement.setAttribute("style", "margin-top: 2rem;")
+                    let textContent = document.createTextNode("Realizado con exito")
+                    newElement.appendChild(textContent)
+                    cont.appendChild(newElement)
+    
+                },
+                error: function(xhr, errmsg, err) {
+                    console.log("Error:", errmsg, "err: ", err, "xhr: ", xhr);
+                }
+            });
+        });
+    })
+
+</script>
+{% endblock extend_scripts %}  

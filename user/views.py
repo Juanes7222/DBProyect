@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
 from .forms import CreateNewUser
 from django.contrib.auth.forms import AuthenticationForm
-from .utils import get_questions, form_manager, get_files_folder, generate_path_img_files, download_zip
+from .utils import get_questions, form_manager, get_files_folder, generate_path_img_files, create_zipfile, search_psi, save_integrate
 from .decorators import backend_required
 # Create your views here.
 
@@ -113,7 +113,7 @@ def prueba(request):
 def forms_views(request):        
     #obtiene los datos del front
     date = request.POST.get("date")
-    print(f"{date= }")
+    # print(f"{date= }")
     #procesa los datos
     files, dates = get_files_folder(request.user.id, date)
     context = {
@@ -122,7 +122,7 @@ def forms_views(request):
     selected_files = generate_path_img_files(request.user.id, files)
     context["files"] = selected_files
     
-    print(context)
+    # print(context)
     
     if request.method == "POST":
         return JsonResponse(context)
@@ -138,6 +138,36 @@ def guide(request):
 
 @login_required
 def view_download_zip(request):
-    date = request.POST.get("date")
-    return download_zip(request.user.id, date)
+    date = request.GET.get("date", "all")
+    # print(request.POST)
+    # print(request.GET)
+    return create_zipfile(request.user.id, date)
+
+@login_required
+def integrations(request):
+    context = {
+        "post": False
+    }
+    if request.method == "POST":
+        psi = search_psi(request.POST.get("input"))
+        if psi:
+            context = {
+                "name": psi.first_name,
+                "last_name": psi.last_name,
+                "email": psi.email,
+                "since": psi.date_joined.strftime("%A, %d de %B de %Y"),
+                "psi_id": psi.id,
+                "user_id": request.user.id
+            }
+        else:
+            context = {
+                "none": True
+            }
+    return render(request, "integrations.html", context)
+
+def integrate(request):
+    save_integrate(request.POST.get("user_id"), request.POST.get("psi_id"))
+    return JsonResponse({"result": True})
+
+#revisar que no se pueda integrar cuando ya se esta integrado
     

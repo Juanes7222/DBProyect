@@ -6,7 +6,7 @@ import os
 import locale
 import zipfile
 import io
-from .models import Forms
+from .models import Forms, Psychologist, UserBase
 from datetime import date, timedelta, datetime
 from WheelofLife import settings
 from django.http import FileResponse, HttpResponse
@@ -159,62 +159,56 @@ def generate_wheel(answers, image_path):
 
     plt.savefig(image_path, dpi=600)
     
-def download_zip(user_id, since_date):
+def create_zipfile(user_id, since_date):
     # Crear un objeto ZIP en memoria
+    if since_date == "last":
+        since_date == date.today().strftime('%Y-%m-%d')
     buffer = io.BytesIO()
     files = get_files_folder(user_id, since_date)[0]
     files = generate_path_img_files(user_id, files, f"{media_directory}/{wheels_path}")
-    files = abs_path(files)
+    # files = abs_path(files)
     files = path_normalize(files)
-    # print(f"{files= }")
-    with zipfile.ZipFile(buffer, 'a', zipfile.ZIP_DEFLATED) as zipf:
-        # Agregar archivos al archivo ZIP
+    with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED,  allowZip64=True) as zipf:
         for file in files:
-            # El primer argumento es la ruta del archivo real, el segundo es la ruta dentro del ZIP
-            print(f"path: {os.path.basename(file)}")
             zipf.write(file, os.path.basename(file))
 
     buffer.seek(0)
     # Configurar la respuesta HTTP
-    response = HttpResponse(buffer.getvalue(), content_type='application/zip')
-    file_name = f"{user_id}_{date.today().strftime('%Y-%m-%d')}.zip"  
-    response['Content-Disposition'] = f'attachment; filename={file_name}'
+    filename = f"{user_id}_{date.today().strftime('%Y-%m-%d')}.zip"
+    response = FileResponse(buffer, as_attachment=True, content_type='application/zip')
+    response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
 
-def prueba():
-    files = get_files_folder("1", "all")[0]
-    files = generate_path_img_files("1", files, f"{media_directory}/{wheels_path}")
-    files = abs_path(files)
-    files = path_normalize(files)
-    with zipfile.ZipFile('spam.zip', 'x') as myzip:
-        for file in files:
-            # El primer argumento es la ruta del archivo real, el segundo es la ruta dentro del ZIP
-            print(f"path: {os.path.basename(file)}")
-            myzip.write(file, os.path.basename(file))
+def search_psi(userinput):
+    # qwery = f"SELECT first_name, last_name, date_joined, email, id FROM user_userbase WHERE username='{userinput}'"
+    user_filter = UserBase.objects.get(username=userinput)
+    if user_filter:
+        if user_filter.user_type == 1:
+            return False
+        # user = Psychologist.objects.filter(id=user.id)
+        return user_filter
+    return False
 
-prueba()
-# def download_zip(user_id, since_date):
-#     # Crea un objeto ZipFile
-#     zip_file = zipfile.ZipFile()
+def save_integrate(user_id, psi_id):
+    psi = Psychologist.objects.get(user_id=psi_id)
+    user = UserBase.objects.get(id=user_id)
+    psi.clients.add(user)
+
+# def create_zipfile(user_id, since_date):
+#     # Crear un objeto ZIP en memoria
 #     files = get_files_folder(user_id, since_date)[0]
 #     files = generate_path_img_files(user_id, files, f"{media_directory}/{wheels_path}")
-#     files = abs_path(files)
+#     # files = abs_path(files)
 #     files = path_normalize(files)
-#     # Agrega archivos al archivo ZIP
-#     for file in files:
-#         print(os.path.basename(file))
-#         zip_file.write(file, os.path.basename(file))
+#     print(f"{files= }")
+#     in_memory_zip = zipfile.ZipFile('compressed_files.zip', 'w', zipfile.ZIP_DEFLATED,  allowZip64=True)
 
-#     # Obtiene el archivo ZIP como un objeto BytesIO
-#     buffer = io.BytesIO()
-#     zip_file.writestr(buffer, 'archivo.zip')
-#     zip_file.close()
-
-#     # Devuelve el archivo ZIP como un objeto HttpResponse
-#     response = HttpResponse(
-#         buffer.getvalue(),
-#         content_type='application/zip',
-#         content_disposition='attachment; filename=archivo.zip'
-#     )
+#     for file in files: 
+#         in_memory_zip.write(file, os.path.basename(file))
+#     in_memory_zip.close()
     
+#     filename = f"{user_id}_{date.today().strftime('%Y-%m-%d')}.zip"
+#     # print(f"{file_name= }")
+#     response = FileResponse(open("compressed_files.zip", 'rb'), as_attachment=True, content_type='application/zip')
+#     response['Content-Disposition'] = f'attachment; filename="{filename}"'
 #     return response

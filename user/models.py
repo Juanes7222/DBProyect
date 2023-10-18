@@ -6,12 +6,13 @@ from django.utils.translation import gettext_lazy as _
 
 # Create your models here.
 
-class UserBase(AbstractUser):
+class UserBase(AbstractUser, models.Model):
     
     user_type = models.IntegerField(verbose_name="Tipo de usuario",
                                     choices=((1, "Usuario normal"), (2, "Psicólogo")),
                                     null=False,
                                     default=1)
+    
     class Meta(AbstractUser.Meta):
         swappable = "AUTH_USER_MODEL"
     
