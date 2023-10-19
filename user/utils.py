@@ -192,7 +192,11 @@ def search_psi(userinput):
 def save_integrate(user_id, psi_id):
     psi = Psychologist.objects.get(user_id=psi_id)
     user = UserBase.objects.get(id=user_id)
+    # print(list(psi.clients))
+    if psi.clients.get(id=user_id):
+        return False
     psi.clients.add(user)
+    return True
 
 # def create_zipfile(user_id, since_date):
 #     # Crear un objeto ZIP en memoria

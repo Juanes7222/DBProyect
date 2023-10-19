@@ -32,7 +32,7 @@ class Forms(models.Model):
     
 class Psychologist(models.Model):
     user_id = models.BigAutoField(primary_key=True)
-    code = models.CharField(max_length=10, default=get_random_string(length=10))
+    code = models.CharField(max_length=10, default=get_random_string(length=12), unique=True)
     clients = models.ManyToManyField(UserBase)
     
 

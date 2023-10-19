@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from .models import Forms, Psychologist
 from django.contrib.auth.decorators import login_required
@@ -139,8 +139,6 @@ def guide(request):
 @login_required
 def view_download_zip(request):
     date = request.GET.get("date", "all")
-    # print(request.POST)
-    # print(request.GET)
     return create_zipfile(request.user.id, date)
 
 @login_required
@@ -166,8 +164,11 @@ def integrations(request):
     return render(request, "integrations.html", context)
 
 def integrate(request):
-    save_integrate(request.POST.get("user_id"), request.POST.get("psi_id"))
-    return JsonResponse({"result": True})
+    result = save_integrate(request.POST.get("user_id"), request.POST.get("psi_id"))
+    return JsonResponse({"result": result})
 
-#revisar que no se pueda integrar cuando ya se esta integrado
+def integrations_code(request, code):
+    psi = get_object_or_404(Psychologist, code=code)
+    #redireccionamiento
+
     

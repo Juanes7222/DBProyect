@@ -23,10 +23,18 @@ $(document).ready(function() {
                 let cont = document.getElementById("cont")
                 cont.innerHTML = ""
                 let newElement = document.createElement("h2")
-                newElement.setAttribute("class", "alert alert-success")
                 newElement.setAttribute("role", "alert")
-                let textContent = document.createTextNode("Realizado con exito")
-                newElement.appendChild(textContent)
+                if (response["result"]){
+                    newElement.setAttribute("class", "alert alert-success")
+                    let textContent = document.createTextNode("Realizado con exito")
+                    newElement.appendChild(textContent)
+                }
+                else{
+                    newElement.setAttribute("class", "alert alert-danger")
+                    let textContent = document.createTextNode("Ya te encuentras integrado")
+                    newElement.appendChild(textContent)
+                }
+                
 
             },
             error: function(xhr, errmsg, err) {
