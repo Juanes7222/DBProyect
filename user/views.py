@@ -10,19 +10,19 @@ from .decorators import backend_required
 # Create your views here.
 
 def home(request):
-    return render(request, "index.html")
+    return render(request, "global/index.html")
 
 def login_user(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
         
     if request.method == 'GET':
-        return render(request, 'login.html', {"form": AuthenticationForm})
+        return render(request, 'global/login.html', {"form": AuthenticationForm})
     else:
         user = authenticate(
             request, username=request.POST['username'], password=request.POST['password'])
         if user is None:
-            return render(request, 'login.html', {"form": AuthenticationForm, "error": "Nombre de usuario o contraseña incorrecto"})
+            return render(request, 'global/login.html', {"form": AuthenticationForm, "error": "Nombre de usuario o contraseña incorrecto"})
 
         login(request, user)
         if request.user.user_type == 1:
@@ -37,7 +37,7 @@ def forms(request):
             "quests": get_questions(),
             "range": range(1, 11, 1)
             }
-        return render(request, "form.html", context)
+        return render(request, "global/form.html", context)
     if not request.POST.get("exit", False):
         form_manager(request.POST, request.user.id)
     return redirect('dashboard')
@@ -63,7 +63,7 @@ def register(request):
         else:
             data['form'] = user_creation_form
 
-    return render(request, 'register.html', data)
+    return render(request, 'global/register.html', data)
 
 @login_required(redirect_field_name="login", login_url="/login/")
 def dashboard(request):
@@ -78,7 +78,7 @@ def dashboard(request):
             "any_form": form.exists(),
         }
         # print(context)
-        return render(request, "dashboard.html", context=context)
+        return render(request, "norm_user/dashboard.html", context=context)
     if request.POST.get("exit", False):
         return exit(request)
 
@@ -87,7 +87,7 @@ def psi_dashboard(request):
     if request.user.user_type == 1:
         return redirect("dashboard")
     if request.method == "GET":
-        return render(request, "dashboard_psi.html")
+        return render(request, "psi_user/dashboard_psi.html")
     if request.POST.get("exit", False):
         return exit(request)
 
@@ -100,7 +100,7 @@ def exit(request):
     return redirect('home')
 
 def prueba(request):
-    return render(request, "prueba.html")
+    return render(request, "global/prueba.html")
 
 @login_required(redirect_field_name="login", login_url="/login/")
 def forms_views(request):        
@@ -117,13 +117,13 @@ def forms_views(request):
         return JsonResponse(context)
     
     context["zip"] = zip(selected_files, dates)
-    return render(request, "forms_views.html", context)
+    return render(request, "norm_user/forms_views.html", context)
 
 def examples(request):
-    return render(request, "examples_img.html")
+    return render(request, "global/examples_img.html")
 
 def guide(request):
-    return render(request, "guide.html")
+    return render(request, "global/guide.html")
 
 @login_required
 def view_download_zip(request):
@@ -150,7 +150,7 @@ def integrations(request):
             context = {
                 "none": True
             }
-    return render(request, "integrations.html", context)
+    return render(request, "norm_user/integrations.html", context)
 
 def integrate(request):
     result = save_integrate(request.POST.get("user_id"), request.POST.get("psi_id"))

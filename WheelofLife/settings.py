@@ -33,6 +33,10 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 # Application definition
 
+SESSION_COOKIE_AGE = 3600  # 1h en segundos
+SESSION_SAVE_EVERY_REQUEST = True  # Guarda la sesión en cada solicitud
+
+
 AUTH_USER_MODEL = "user.UserBase"
 
 INSTALLED_APPS = [
