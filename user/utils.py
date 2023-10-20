@@ -6,6 +6,7 @@ import os
 import locale
 import zipfile
 import io
+from .crud import save_answers
 from .models import Forms, Psychologist, UserBase
 from datetime import date, timedelta, datetime
 from WheelofLife import settings
@@ -74,7 +75,7 @@ def get_files_folder(user_id, prov_date=None):
 
 def form_manager(answers, user_id):
     score = get_answers(answers, user_id)
-    form_id = save_answers(score)
+    form_id = save_answers_manager(score)
     path = generate_image_path(user_id, form_id)
     values = list(score.values())
     values.pop()
@@ -100,10 +101,8 @@ def get_answers(answers, user_id):
     return score
     
     
-def save_answers(answers):
-    form = Forms.objects.create(
-        **answers
-    )
+def save_answers_manager(answers):
+    form = save_answers(answers)
     return form.form_id
     
 def generate_image_path(user_id, form_id):
@@ -166,7 +165,6 @@ def create_zipfile(user_id, since_date):
     buffer = io.BytesIO()
     files = get_files_folder(user_id, since_date)[0]
     files = generate_path_img_files(user_id, files, f"{media_directory}/{wheels_path}")
-    # files = abs_path(files)
     files = path_normalize(files)
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED,  allowZip64=True) as zipf:
         for file in files:
@@ -179,24 +177,14 @@ def create_zipfile(user_id, since_date):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
 
-def search_psi(userinput):
-    # qwery = f"SELECT first_name, last_name, date_joined, email, id FROM user_userbase WHERE username='{userinput}'"
-    user_filter = UserBase.objects.get(username=userinput)
-    if user_filter:
-        if user_filter.user_type == 1:
-            return False
-        # user = Psychologist.objects.filter(id=user.id)
-        return user_filter
-    return False
-
-def save_integrate(user_id, psi_id):
-    psi = Psychologist.objects.get(user_id=psi_id)
-    user = UserBase.objects.get(id=user_id)
-    # print(list(psi.clients))
-    if psi.clients.get(id=user_id):
-        return False
-    psi.clients.add(user)
-    return True
+# def search_psi(userinput):
+#     # qwery = f"SELECT first_name, last_name, date_joined, email, id FROM user_userbase WHERE username='{userinput}'"
+#     user_filter = UserBase.objects.get(username=userinput)
+#     if user_filter:
+#         if user_filter.user_type == 1:
+#             return False
+#         return user_filter
+#     return False
 
 # def create_zipfile(user_id, since_date):
 #     # Crear un objeto ZIP en memoria

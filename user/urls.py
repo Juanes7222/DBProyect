@@ -17,6 +17,5 @@ urlpatterns = [
     path("guide/", views.guide, name="guide"),
     path("forms_views/download_wheels/", views.view_download_zip, name="download-zip"),
     path("integrations/", views.integrations, name="integrations"),
-    path("integrations/<str:code>", views.integrations_code, name="integrations-code"),
     path("integrations/integrate/", views.integrate, name="integrate")
 ]

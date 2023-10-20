@@ -1,11 +1,11 @@
+from .crud import create_user, create_psi, get_forms, save_integrate, search_psi
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
-from .models import Forms, Psychologist
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
 from .forms import CreateNewUser
 from django.contrib.auth.forms import AuthenticationForm
-from .utils import get_questions, form_manager, get_files_folder, generate_path_img_files, create_zipfile, search_psi, save_integrate
+from .utils import get_questions, form_manager, get_files_folder, generate_path_img_files, create_zipfile
 from .decorators import backend_required
 # Create your views here.
 
@@ -49,24 +49,17 @@ def register(request):
     }
 
     if request.method == 'POST':
-        user_creation_form = CreateNewUser(data=request.POST)
-
-        if user_creation_form.is_valid():
-            user_type = user_creation_form.cleaned_data['user_type']
-            
-            user_creation_form.save()
-
-            user = authenticate(username=user_creation_form.cleaned_data['username'], password=user_creation_form.cleaned_data['password1'])
-            login(request, user)
-            if user is not None:
-                login(request, user)        
-                if user_type == 1:            
-                    return redirect('dashboard')
-                else:
-                    Psychologist.objects.create(
-                        user_id=user.id
-                    )
-                    return redirect("psi-dashboard")
+        user_creation_form = create_user(request)
+        user_type = user_creation_form.cleaned_data['user_type']
+        user = authenticate(username=user_creation_form.cleaned_data['username'], password=user_creation_form.cleaned_data['password1'])
+        login(request, user)
+        if user is not None:
+            login(request, user)        
+            if user_type == 1:            
+                return redirect('dashboard')
+            else:
+                create_psi(user_id=user.id)
+                return redirect("psi-dashboard")
         else:
             data['form'] = user_creation_form
 
@@ -77,14 +70,14 @@ def dashboard(request):
     if request.user.user_type == 2:
         return redirect("psi-dashboard")
     if request.method == "GET":
-        form = Forms.objects.filter(user_id=request.user.id)
+        form = get_forms(user_id=request.user.id)
         context = {
             "id": request.user.id,
             "username": request.user.username,
             "name": request.user.first_name,
             "any_form": form.exists(),
         }
-        print(context)
+        # print(context)
         return render(request, "dashboard.html", context=context)
     if request.POST.get("exit", False):
         return exit(request)
@@ -111,19 +104,15 @@ def prueba(request):
 
 @login_required(redirect_field_name="login", login_url="/login/")
 def forms_views(request):        
-    #obtiene los datos del front
     date = request.POST.get("date")
-    # print(f"{date= }")
-    #procesa los datos
+
     files, dates = get_files_folder(request.user.id, date)
     context = {
         "dates": dates
     }
     selected_files = generate_path_img_files(request.user.id, files)
     context["files"] = selected_files
-    
-    # print(context)
-    
+        
     if request.method == "POST":
         return JsonResponse(context)
     
@@ -167,8 +156,6 @@ def integrate(request):
     result = save_integrate(request.POST.get("user_id"), request.POST.get("psi_id"))
     return JsonResponse({"result": result})
 
-def integrations_code(request, code):
-    psi = get_object_or_404(Psychologist, code=code)
-    #redireccionamiento
-
+def get_integrates(request):
+    return render("psi_user/integrations.html")
     
