@@ -1,11 +1,11 @@
-from .crud import create_user, create_psi, get_forms, save_integrate, search_psi
+from .crud import create_user, create_psi, get_forms, save_integrate, search_psi, get_info_user, save_message_form, get_message_form
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
 from .forms import CreateNewUser
 from django.contrib.auth.forms import AuthenticationForm
-from .utils import get_questions, form_manager, get_files_folder, generate_path_img_files, create_zipfile
+from .utils import get_questions, form_manager, get_files_folder, generate_path_img_files, create_zipfile, get_users_integrate, get_forms_ids
 from .decorators import backend_required
 # Create your views here.
 
@@ -104,19 +104,23 @@ def prueba(request):
 
 @login_required(redirect_field_name="login", login_url="/login/")
 def forms_views(request):        
-    date = request.POST.get("date")
-
+    info = request.POST.get("download")
+    date =  request.POST.get("date")
+    if info:
+        return create_zipfile(request.user.id, date)
+    
     files, dates = get_files_folder(request.user.id, date)
     context = {
         "dates": dates
     }
     selected_files = generate_path_img_files(request.user.id, files)
     context["files"] = selected_files
+    forms_ids = get_forms_ids(files)
+    context["forms_ids"] = forms_ids
         
     if request.method == "POST":
         return JsonResponse(context)
-    
-    context["zip"] = zip(selected_files, dates)
+    context["zip"] = zip(selected_files, dates, forms_ids)
     return render(request, "norm_user/forms_views.html", context)
 
 def examples(request):
@@ -156,6 +160,53 @@ def integrate(request):
     result = save_integrate(request.POST.get("user_id"), request.POST.get("psi_id"))
     return JsonResponse({"result": result})
 
+def view_info_user(request, client_id):
+    if request.method == "POST":
+        info = request.POST.get("date")
+        date, user_id = tuple(info.split("_"))
+        return create_zipfile(user_id, date)
+    client = get_info_user(int(client_id))
+    # print(user_id)
+    date = "all"
+
+    files, dates = get_files_folder(client_id, date)
+    forms_ids = get_forms_ids(files)
+    context = {
+        "dates": dates
+    }
+    selected_files = generate_path_img_files(client_id, files)
+    context["files"] = selected_files
+        
+    context["client"] = f"{client.first_name} {client.last_name}"
+    context["client_id"] = client.id
+    context["zip"] = zip(selected_files, dates, forms_ids)
+    return render(request, "psi_user/view_integrations.html", context)
+    
+
 def get_integrates(request):
-    return render("psi_user/integrations.html")
+    if request.user.user_type == 1:
+        return redirect("dashboard")
+    if request.method == "POST":
+        print(request.POST)
+        return redirect("view-integrations", client_id=request.POST.get("integrate"))
+    clients = get_users_integrate(request.user.id)
+    context ={
+        "clients": clients,
+    }
+    return render(request, "psi_user/integrations.html", context)
+
+def save_message(request):
+    message = request.POST.get("message")
+    title = request.POST.get("title")
+    form_id = request.POST.get("form_id")
+    created = save_message_form(message, form_id, title)
+    return JsonResponse({"result": created})
+
+def get_message(request, form_id):
+    message, title = get_message_form(int(form_id))
+    response = {
+        "message": message,
+        "title": title
+    }
+    return JsonResponse(response)
     

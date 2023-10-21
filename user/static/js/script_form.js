@@ -22,7 +22,51 @@ let csrfToken = $("input[name='csrfmiddlewaretoken']").val();
 //     a.click()
 // })
 
-function reloadPage(files, dates){
+// let $buttonMess = $(".button-message")
+
+// $buttonMess.each(function(index, element) {
+    
+// });
+
+// for (let i=0;i<buttonMess.length;i++){
+//     console.log(buttonMess[i])
+//     buttonMess[i].addEventListener("click", (function() {
+//         // Realizar una solicitud AJAX al backend
+//         let formId = buttonMess[i].name 
+//         let title = document.getElementById(`title_${formId}`)
+//         let message = document.getElementById(`message-text_${formId}`)
+
+//         $.ajax({
+//             url: "save_message/",
+//             method: "POST",
+//             data: {
+//                 // Datos que deseas enviar al backend
+//                 csrfmiddlewaretoken: csrfToken,
+//                 title: title,
+//                 message: message,
+//                 form_id: formId
+//             },
+//             success: function(response) {
+//                 console.log("Respuesta del servidor:", response);
+//                 document.write(`<div class="toast align-items-center text-bg-primary border-0" role="alert" aria-live="assertive" aria-atomic="true">
+//                 <div class="d-flex">
+//                   <div class="toast-body">
+//                     Hello, world! This is a toast message.
+//                   </div>
+//                   <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+//                 </div>
+//               </div>`)
+//             },
+//             error: function(xhr, errmsg, err) {
+//                 console.log("Error:", errmsg, "err: ", err, "xhr: ", xhr);
+//             }
+//         })
+//     })
+//     )
+// }
+
+
+function reloadPage(files, dates, formsIds){
     let imgContainer = document.getElementById("img-container")
     imgContainer.innerHTML = ""
     for (let i=0; i<files.length; i++){
@@ -35,13 +79,82 @@ function reloadPage(files, dates){
         let newDivElement = document.createElement("div")
         newDivElement.setAttribute("class", "alert alert-info")
         newDivElement.setAttribute("role", "alert")
-        let textContent = document.createTextNode(dates[i])
+        let textContent = document.createTextNode(`Fecha: ${dates[i]}`)
         newDivElement.appendChild(textContent)
+
+        let newButton = document.createElement("button")
+        let newModal = document.createElement("div")
+
+        newButton.setAttribute("class", "btn btn-primary button-message")
+        newButton.setAttribute("name", `${formsIds[i]}`)
+        newButton.setAttribute("data-bs-toggle", "modal")
+        newButton.setAttribute("data-bs-target", "#messagemodal")
+
+        let textButton = document.createTextNode("Ver comentarios")
+        newButton.appendChild(textButton)
+
+        newModal.setAttribute("class", "modal fade")
+        newModal.setAttribute("id", "messagemodal")
+        newModal.setAttribute("tabindex", "-1")
+        newModal.setAttribute("aria-labelledby", "messagemodallabel")
+        newModal.setAttribute("aria-hidden", "true")
+
+        newModal.innerHTML = `
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 id="title_${formsIds[i]}" class="modal-title">Modal title</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <p id="message-text_${formsIds[i]}">Modal body text goes here.</p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+          </div>
+        </div>
+        `
 
         imgContainer.appendChild(newDivElement)
         imgContainer.appendChild(newImgElement)
+        imgContainer.appendChild(newButton)
+        imgContainer.appendChild(newModal)
     }
 }
+
+
+function mostrarToast() {
+    // Crea un elemento de toast utilizando Bootstrap
+    let myToastEl = document.getElementById('myToast');
+    let myToast = new bootstrap.Toast(myToastEl);
+    myToast.show();
+
+}
+
+function show_message(response, formId){
+    let title = document.getElementById(`title_${formId}`)
+    let message = document.getElementById(`message-text_${formId}`)
+
+    let textTitle = response["title"]
+    let textMessage = response["message"]
+
+    if (textTitle == null){
+        textTitle = ""
+        textMessage = "Nada todavia"
+
+    }
+    message.innerHTML = ""
+    title.innerHTML = ""
+
+    let textContentTitle = document.createTextNode(`Titulo: ${textTitle}`)
+    let textContentMessage = document.createTextNode(`${textMessage}`)
+
+    title.appendChild(textContentTitle)
+    message.appendChild(textContentMessage)
+
+}
+  
 
 $(document).ready(function() {
     $("#select-view").change(function() {
@@ -74,7 +187,7 @@ $(document).ready(function() {
             success: function(response) {
                 // Manejar la respuesta del backend
                 console.log("Respuesta del servidor:", response);
-                reloadPage(response["files"], response["dates"]);
+                reloadPage(response["files"], response["dates"], response["forms_ids"]);
 
             },
             error: function(xhr, errmsg, err) {
@@ -83,105 +196,25 @@ $(document).ready(function() {
         });
     });
 
-    // $("#all").click(function() {
-    //     // Realizar una solicitud AJAX al backend
-    //     $.ajax({
-    //         url: "download_wheels/",
-    //         method: "GET",
-    //         dataType: "blob",
-    //         data: {
-    //             // Datos que deseas enviar al backend
-    //             csrfmiddlewaretoken: csrfToken,
-    //             date: "all"
-    //         },
-    //         headers: {
-    //             // Especifica el tipo de archivo MIME en el encabezado `Content-Type`
-    //             "Content-Type": "application/zip"
-    //         },
-    //         success: function(data) {
-    //             let blob = new Blob([data]);
-    //             let url = window.URL.createObjectURL(blob);
-    //             let link = document.createElement('a');
-    //             link.style = "none"
-    //             link.href = url;
-    //             link.download = 'archivo.zip'; // Nombre del archivo ZIP
-    
-    //             // Simula un clic en el enlace para iniciar la descarga
-    //             link.click();
-    //             window.URL.revokeObjectURL(url);
-    
-    //         },
-    //         error: function(xhr, errmsg, err) {
-    //             console.log("Error:", errmsg, "err: ", err, "xhr: ", xhr);
-    //         }
-    //     });
-    // });
+    $(".button-message").click(function(){
+        let formId = $(this).attr("name")
+        console.log(formId)
 
-    // $("#all").click(function() {
-    //     // Realizar una solicitud AJAX al backend
-    //     $.ajax({
-    //         url: "download_wheels/",
-    //         method: "GET",
-    //         datatype: "blob",
-    //         data: {
-    //             // Datos que deseas enviar al backend
-    //             csrfmiddlewaretoken: csrfToken,
-    //             date: "all"
-    //         },
-    //         success: function(data) {
-    //             let blob = new Blob([data], { type: 'application/zip' });
-    //             let url = window.URL.createObjectURL(blob);
-    //             let link = document.createElement('a');
-    //             link.style = "none"
-    //             link.href = url;
-    //             link.download = 'archivo.zip'; // Nombre del archivo ZIP
+        $.ajax({
+            url: `get_message/${formId}`,
+            method: "GET",
+            success: function(response) {
+                console.log("Respuesta del servidor:", response);
+                show_message(response, formId)
+            },
+            error: function(xhr, errmsg, err) {
+                console.log("Error:", errmsg, "err: ", err, "xhr: ", xhr);
+            }
+        })
+    })
 
-    //             // Simula un clic en el enlace para iniciar la descarga
-    //             link.click();
-    //             window.URL.revokeObjectURL(url);
-
-    //         },
-    //         error: function(xhr, errmsg, err) {
-    //             console.log("Error:", errmsg, "err: ", err, "xhr: ", xhr);
-    //         }
-    //     });
-    // });
-
-    // $("#date").click(function() {
-    //     // Realizar una solicitud AJAX al backend
-    //     let date = document.getElementById("value-date").value
-
-    //     $.ajax({
-    //         url: "download_wheels/",
-    //         method: "GET",
-    //         datatype: "arraybuffer",
-    //         data: {
-    //             // Datos que deseas enviar al backend
-    //             csrfmiddlewaretoken: csrfToken,
-    //             date: date.value
-    //         },
-    //         success: function(data) {
-    //             // Manejar la respuesta del backend
-    //             // console.log("Respuesta del servidor:", data);
-    //             // reloadPage(response["files"], response["dates"]);
-    //             // Manejar la respuesta del backend aquí
-    //             // Descargar el archivo ZIP
-    //             let blob = new Blob([data], { type: 'application/zip' });
-    //             let url = window.URL.createObjectURL(blob);
-    //             let link = document.createElement('a');
-    //             link.style = "none"
-    //             link.href = url;
-    //             link.download = 'archivo.zip'; // Nombre del archivo ZIP
-
-    //             // Simula un clic en el enlace para iniciar la descarga
-    //             link.click();
-    //             window.URL.revokeObjectURL(url);
-
-    //         },
-    //         error: function(xhr, errmsg, err) {
-    //             console.log("Error:", errmsg, "err: ", err, "xhr: ", xhr);
-    //         }
-    //     });
-    // });
+    $("#back-button").click(function() {
+        window.history.back();
+    });
 });
 

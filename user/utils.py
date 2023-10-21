@@ -6,7 +6,7 @@ import os
 import locale
 import zipfile
 import io
-from .crud import save_answers
+from .crud import save_answers, get_clients
 from .models import Forms, Psychologist, UserBase
 from datetime import date, timedelta, datetime
 from WheelofLife import settings
@@ -41,8 +41,12 @@ def get_date_file(files):
     dates = []
     for file in files:
         file_date = date.fromisoformat(file.split("_")[-1][:-4])
-        dates.append(file_date.strftime("%A, %d de %B de %Y"))
+        dates.append(file_date.strftime("%A, %d de %B de %Y").title())
     return dates
+
+def get_forms_ids(files):
+    forms_ids = list(map(lambda x: x.split("_")[1], files))
+    return forms_ids
 
 def select_files(files: list[str], date):
     dates = []
@@ -51,7 +55,7 @@ def select_files(files: list[str], date):
         file_date = date.fromisoformat(file.split("_")[-1][:-4])
         if  file_date >= date:
             selected_files.append(file)
-            dates.append(file_date.strftime("%A, %d de %B de %Y"))
+            dates.append(file_date.strftime("%A, %d de %B de %Y").title())
     return selected_files, dates
 
 def get_files_folder(user_id, prov_date=None):
@@ -61,6 +65,9 @@ def get_files_folder(user_id, prov_date=None):
         if prov_date == "all":
             return files, get_date_file(files)
         
+        elif prov_date == "last":
+            return [files[-1]], None
+        
         elif not prov_date:
             prov_date = date.today()
             prov_date -= timedelta(weeks=1)
@@ -69,6 +76,7 @@ def get_files_folder(user_id, prov_date=None):
             prov_date = date.fromisoformat(prov_date.split("T")[0])
             
         selected_files, dates = select_files(files, prov_date)
+        selected_files = path_normalize(selected_files)
         return selected_files, dates
     except FileNotFoundError:
         return None
@@ -160,12 +168,11 @@ def generate_wheel(answers, image_path):
     
 def create_zipfile(user_id, since_date):
     # Crear un objeto ZIP en memoria
-    if since_date == "last":
-        since_date == date.today().strftime('%Y-%m-%d')
-    buffer = io.BytesIO()
     files = get_files_folder(user_id, since_date)[0]
+    print(files)
     files = generate_path_img_files(user_id, files, f"{media_directory}/{wheels_path}")
     files = path_normalize(files)
+    buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED,  allowZip64=True) as zipf:
         for file in files:
             zipf.write(file, os.path.basename(file))
@@ -177,30 +184,7 @@ def create_zipfile(user_id, since_date):
     response['Content-Disposition'] = f'attachment; filename="{filename}"'
     return response
 
-# def search_psi(userinput):
-#     # qwery = f"SELECT first_name, last_name, date_joined, email, id FROM user_userbase WHERE username='{userinput}'"
-#     user_filter = UserBase.objects.get(username=userinput)
-#     if user_filter:
-#         if user_filter.user_type == 1:
-#             return False
-#         return user_filter
-#     return False
+def get_users_integrate(user_id):
+    clients = get_clients(user_id)
+    return clients
 
-# def create_zipfile(user_id, since_date):
-#     # Crear un objeto ZIP en memoria
-#     files = get_files_folder(user_id, since_date)[0]
-#     files = generate_path_img_files(user_id, files, f"{media_directory}/{wheels_path}")
-#     # files = abs_path(files)
-#     files = path_normalize(files)
-#     print(f"{files= }")
-#     in_memory_zip = zipfile.ZipFile('compressed_files.zip', 'w', zipfile.ZIP_DEFLATED,  allowZip64=True)
-
-#     for file in files: 
-#         in_memory_zip.write(file, os.path.basename(file))
-#     in_memory_zip.close()
-    
-#     filename = f"{user_id}_{date.today().strftime('%Y-%m-%d')}.zip"
-#     # print(f"{file_name= }")
-#     response = FileResponse(open("compressed_files.zip", 'rb'), as_attachment=True, content_type='application/zip')
-#     response['Content-Disposition'] = f'attachment; filename="{filename}"'
-#     return response

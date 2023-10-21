@@ -29,6 +29,8 @@ class Forms(models.Model):
     ambiente_fisico = models.IntegerField()
     date = models.DateTimeField(default=timezone.now)
     user_id = models.ForeignKey(UserBase, on_delete=models.CASCADE)
+    message = models.TextField(max_length=200, null=True)
+    message_title = models.TextField(max_length=30, null=True)
     
 class Psychologist(models.Model):
     user_id = models.BigAutoField(primary_key=True)

@@ -1,0 +1,36 @@
+{% extends "psi_user/base_dashboard.html" %}
+
+{% load static %}
+
+{% block content %}
+
+<h1>Usuarios integrados</h1>
+
+<div class="container">
+{% for client in clients %}
+
+<div class="card mb-2" style="margin-top: 2rem; max-width: 540px;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        {% comment %} <img src="..." class="img-fluid rounded-start" alt="..."> {% endcomment %}
+        <svg class="img-fluid rounded-start" xmlns="http://www.w3.org/2000/svg" width="150" height="150" fill="currentColor" class="bi bi-person-badge-fill" viewBox="0 0 16 16">
+            <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2zm4.5 0a.5.5 0 0 0 0 1h3a.5.5 0 0 0 0-1h-3zM8 11a3 3 0 1 0 0-6 3 3 0 0 0 0 6zm5 2.755C12.146 12.825 10.623 12 8 12s-4.146.826-5 1.755V14a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1v-.245z"/>
+          </svg>
+      </div>
+      <form method="post">
+        {% csrf_token %}
+      <div class="col-md-8 text-center" style="margin-top: 2rem;">
+        <div class="card-body">
+          <h5 class="card-title">{{client.first_name.title}} {{client.last_name.title}}</h5>
+          <p class="card-text">Email: <a href="mailto:{{client.email}}">{{client.email}}</a></p>
+          <button id="integrate_{{client.id}}" value="{{client.id}}" name="integrate" type="submit" class="btn btn-primary">Ver mas detalles</button>
+          <p class="card-text"><small class="text-body-secondary">Se unió: {{client.date_joined}}</small></p>
+        </div>
+      </div>
+    </form>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock content %}

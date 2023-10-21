@@ -1,0 +1,116 @@
+{% extends "psi_user/base_dashboard.html" %}
+
+{% load static %}
+
+{% block content %}
+
+
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Formularios: {{client}}</h1>
+  <div class="btn-toolbar mb-2 mb-md-0">
+    <div class="btn-group me-2">
+      <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          Exportar
+        </button>
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmacion</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                ¿Deseas descargar todas las Ruedas de la vida?
+              </div>
+              <div class="modal-footer">
+                <form method="post">
+                    {% csrf_token %}
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button name="date" value="last_{{client_id}}" class="btn btn-success" data-bs-dismiss="modal">Descargar el ultimo</button>
+                <button name="date" value="all_{{client_id}}" class="btn btn-primary" data-bs-dismiss="modal">Si!</button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#backModal">
+          Atras
+        </button>
+        <div class="modal fade" id="backModal" tabindex="-1" aria-labelledby="backModal" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h1 class="modal-title fs-5" id="backModalLabel">Confirmacion</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                ¿Deseas regresar a la pagina anterior?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button id="back-button" class="btn btn-primary" data-bs-dismiss="modal">Si!</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div id="img-container" class="text-center">
+  {% for file, date, form_id in zip %}
+  <div class="alert alert-info" role="alert">
+      Fecha: {{date}}
+  </div>
+      <img src="/{{file}}" class="img-fluid rounded" alt="wheel of life">
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#messagemodal" data-bs-whatever="">Agregar comentario</button>
+
+<div class="modal fade" id="messagemodal" tabindex="-1" aria-labelledby="messagemodallabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="messagemodallabel">Mensaje</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="recipient-name" class="col-form-label">Titulo:</label>
+            <input name="title" type="text" class="form-control" id="title_{{form_id}}">
+          </div>
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label">Mensaje:</label>
+            <textarea name="message" class="form-control" id="message-text_{{form_id}}"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button name="{{form_id}}" type="button" class="btn btn-primary button-message" data-bs-dismiss="modal">Enviar mensaje</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+  
+  {% endfor %}
+  </div>
+
+  <div class="toast" id="myToast" role="alert" aria-live="assertive" aria-atomic="true">
+    <div class="toast-header">
+      <strong class="me-auto">Bootstrap</strong>
+      <small>Just now</small>
+      <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+    <div class="toast-body">
+      Hello, world! This is a toast message.
+    </div>
+  </div>
+  
+  
+  {% endblock content %}
+  
+  {% block extend_scripts %}
+  <script src="{% static "js/script_form_psi.js" %}"></script>
+  {% endblock extend_scripts %}   

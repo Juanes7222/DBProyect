@@ -4,13 +4,26 @@ from .forms import CreateNewUser
 
 def get_info_user(user_id):
     user = UserBase.objects.get(id=user_id)
-    query = f"SELECT * FROM user_psychologist_clients WHERE userbase_id={user_id}"
-    integrations = Psychologist.clients.raw(query)
-    data = {
-        "user": user,
-        "integrations": integrations
-    }
-    return data
+    # query = f"SELECT * FROM user_psychologist_clients WHERE userbase_id={user_id}"
+    # integrations = Psychologist.clients.raw(query)
+    # data = {
+    #     "user": user,
+    #     "integrations": integrations
+    # }
+    return user
+
+def save_message_form(message, form_id, message_title):
+    form = Forms.objects.get(form_id=form_id)
+    form.message = message
+    form.message_title = message_title
+    form.save()
+    return True
+    
+def get_message_form(form_id):
+    form = Forms.objects.get(form_id=form_id)
+    message = form.message
+    title = form.message_title
+    return message, title
 
 def save_answers(answers):
     form = Forms.objects.create(
@@ -48,3 +61,10 @@ def search_psi(userinput):
             return False
         return user_filter
     return False
+
+def get_clients(user_id):
+    # query = f"SELECT * FROM user_psychologist_clients WHERE user_psychologist_clients.psychologist_id={user_id}"
+    psi = Psychologist.objects.get(user_id=user_id)
+    
+    clients = psi.clients.all()
+    return clients
