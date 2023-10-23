@@ -7,6 +7,9 @@
 
 let csrfToken = $("input[name='csrfmiddlewaretoken']").val();
 
+const popoverTriggerList = document.querySelectorAll('[data-bs-toggle="popoverUser"]')
+const popoverList = [...popoverTriggerList].map(popoverTriggerEl => new bootstrap.Popover(popoverTriggerEl))
+
 
 function reloadPage(files, dates){
     let imgContainer = document.getElementById("img-container")
@@ -36,7 +39,36 @@ function mostrarToast() {
     let myToast = new bootstrap.Toast(myToastEl);
     myToast.show();
 
-  }
+}
+
+function showMessage(response){
+    let title = document.getElementById(`title2`)
+    let message = document.getElementById(`message-text2`)
+    console.log("respuesta: ", title, message)
+
+    let textTitle = response["title"]
+    let textMessage = response["message"]
+
+    if (textTitle == null){
+        textTitle = ""
+        textMessage = "Nada todavia"
+
+    }
+    message.textContent = ""
+    title.textContent = ""
+
+    let textContentTitle = document.createTextNode(`Titulo: ${textTitle}`)
+    let textContentMessage = document.createTextNode(`${textMessage}`)
+
+    title.appendChild(textContentTitle)
+    message.appendChild(textContentMessage)
+
+    // let myModal = new bootstrap.Modal(document.getElementById("messagemodal2"));
+    // myModal.show();
+    
+    // addAllListeners()
+
+}
   
 
 $(document).ready(function() {
@@ -108,6 +140,23 @@ $(document).ready(function() {
     $("#back-button").click(function() {
         window.history.back();
     });
+
+    $(".button-message2").click(function(){
+        let formId = $(this).attr("name")
+        console.log(formId)
+
+        $.ajax({
+            url: `/forms_views/get_message/${formId}`,
+            method: "GET",
+            success: function(response) {
+                console.log("Respuesta del servidor:", response);
+                showMessage(response)
+            },
+            error: function(xhr, errmsg, err) {
+                console.log("Error:", errmsg, "err: ", err, "xhr: ", xhr);
+            }
+        })
+    })
 
 });
 

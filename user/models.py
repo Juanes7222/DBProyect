@@ -13,6 +13,8 @@ class UserBase(AbstractUser, models.Model):
                                     null=False,
                                     default=1)
     
+    document = models.CharField(max_length=20, blank=False, unique=True, verbose_name="N° de Documento")
+    
     class Meta(AbstractUser.Meta):
         swappable = "AUTH_USER_MODEL"
     
@@ -36,6 +38,12 @@ class Psychologist(models.Model):
     user_id = models.BigAutoField(primary_key=True)
     code = models.CharField(max_length=10, default=get_random_string(length=12), unique=True)
     clients = models.ManyToManyField(UserBase)
+    
+class Requests(models.Model):
+    req_id = models.BigAutoField(primary_key=True)
+    user_id = models.ForeignKey(UserBase, on_delete=models.CASCADE)
+    result = models.BooleanField(default=False)
+    user_req = models.ForeignKey(Psychologist, on_delete=models.CASCADE)
     
 
 #Nota: un usuario puede tener mas de un formulario hecho, y un formulario esta compuesto por el ponderado de cada seccion

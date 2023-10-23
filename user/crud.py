@@ -1,9 +1,9 @@
-from .models import UserBase, Psychologist, Forms
+from .models import UserBase, Psychologist, Forms, Requests
 from .forms import CreateNewUser
 
 
-def get_info_user(user_id):
-    user = UserBase.objects.get(id=user_id)
+def get_info_user(**kwargs):
+    user = UserBase.objects.get(**kwargs)
     # query = f"SELECT * FROM user_psychologist_clients WHERE userbase_id={user_id}"
     # integrations = Psychologist.clients.raw(query)
     # data = {
@@ -11,6 +11,25 @@ def get_info_user(user_id):
     #     "integrations": integrations
     # }
     return user
+
+def get_info_psi(**kwargs):
+    user = Psychologist.objects.get(**kwargs)
+    return user
+
+def save_requests_integrate(**kwargs):
+    req = Requests.objects.create(**kwargs)
+    
+def get_request(arg, __case=1):
+    if __case == 1:
+        req = Requests.objects.filter(user_id=arg)
+    else:
+        req = Requests.objects.get(req_id=arg)
+        
+    return req
+    
+def update_request(request):
+    request.result = True
+    request.save()
 
 def save_message_form(message, form_id, message_title):
     form = Forms.objects.get(form_id=form_id)
@@ -34,9 +53,12 @@ def save_answers(answers):
 def save_integrate(user_id, psi_id):
     psi = Psychologist.objects.get(user_id=psi_id)
     user = UserBase.objects.get(id=user_id)
-    if psi.clients.get(id=user_id):
-        return False
-    psi.clients.add(user)
+    try:
+        if psi.clients.get(id=user_id):
+            return False
+        psi.clients.add(user)
+    except UserBase.DoesNotExist:
+        psi.clients.add(user)
     return True
 
 def create_user(data):
@@ -45,6 +67,7 @@ def create_user(data):
     if user_creation_form.is_valid():
         user_creation_form.save()
         return user_creation_form
+    
         
 def create_psi(**kwargs):
     Psychologist.objects.create(**kwargs)

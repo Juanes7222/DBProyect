@@ -6,6 +6,38 @@
 
 <h1>Usuarios integrados</h1>
 
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <button type="button" class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#integrationModal">
+    Solicitar integracion
+  </button>
+  
+  <div class="modal fade" id="integrationModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="exampleModalLabel">Buscar</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="recipient-name" class="col-form-label">N° de Documento</label>
+              <input data-bs-container="body" data-bs-toggle="popoverUser" data-bs-placement="top" data-bs-content="Recuerda que debe el usuario debe estar registrado" type="text" class="form-control" id="recipient-name" name="document">
+            </div>
+          </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary">Cerrar</button>
+          <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Guardar</button>
+        </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 <div class="container">
 {% for client in clients %}
 
@@ -33,4 +65,17 @@
   {% endfor %}
 </div>
 
+
+
 {% endblock content %}
+
+{% block extend_scripts %}
+
+<script>
+  let tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="popoverUser"]'))
+  let tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+    return new bootstrap.Tooltip(tooltipTriggerEl)
+  })
+</script>
+
+{% endblock extend_scripts %}

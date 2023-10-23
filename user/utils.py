@@ -6,7 +6,7 @@ import os
 import locale
 import zipfile
 import io
-from .crud import save_answers, get_clients
+from .crud import save_answers, get_clients, get_info_user, save_requests_integrate, get_request
 from .models import Forms, Psychologist, UserBase
 from datetime import date, timedelta, datetime
 from WheelofLife import settings
@@ -81,7 +81,16 @@ def get_files_folder(user_id, prov_date=None):
     except FileNotFoundError:
         return None
 
-def form_manager(answers, user_id):
+def form_manager(answers, user_id, __case):
+    if __case == 2:
+        score = get_answers(answers, None)
+        values = list(score.values())
+        values.pop()
+        buffer = generate_wheel(values, None)
+        response = FileResponse(buffer, as_attachment=True, content_type='image/png')  # Ajusta el tipo de contenido según el formato
+        
+        return response
+    
     score = get_answers(answers, user_id)
     form_id = save_answers_manager(score)
     path = generate_image_path(user_id, form_id)
@@ -164,7 +173,13 @@ def generate_wheel(answers, image_path):
         ax.text(center_x-(i*0.1)-0.05, center_y, str(i+1), horizontalalignment='center', verticalalignment='center', fontsize=13)
         inner_radius -= 0.1
 
-    plt.savefig(image_path, dpi=600)
+    if image_path:
+        plt.savefig(image_path, dpi=600)
+    else:
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format="png")
+        buffer.seek(0)
+        return buffer
     
 def create_zipfile(user_id, since_date):
     # Crear un objeto ZIP en memoria
@@ -187,4 +202,12 @@ def create_zipfile(user_id, since_date):
 def get_users_integrate(user_id):
     clients = get_clients(user_id)
     return clients
+
+
+def request_integration(document, psi_id):
+    user = get_info_user(document=document)
+    # user_psi = get_info_user(id=psi_id)
+    # psi = get_info_psi(user_id=user_psi)
+    save_requests_integrate(user_id_id=user.id, user_req_id=int(psi_id))
+    
 

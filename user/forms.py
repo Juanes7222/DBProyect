@@ -6,7 +6,7 @@ class CreateNewUser(UserCreationForm):
  
 	class Meta:
 		model = UserBase
-		fields = ['username', 'first_name', 'last_name', 'email', 'user_type']
+		fields = ['username', 'first_name', 'last_name', 'document', 'email', 'user_type']
   
 	def clean_email(self):
 		email = self.cleaned_data['email']
@@ -20,3 +20,10 @@ class CreateNewUser(UserCreationForm):
 		if UserBase.objects.filter(username=username).exists():
 			raise forms.ValidationError("Este usuario ya está en uso")
 		return username
+
+	def clean_document(self):
+		document = self.cleaned_data["document"]
+		if UserBase.objects.filter(document=document).exists():
+			raise forms.ValidationError("Alguien con este documento ya esta registrado")
+		return document
+			

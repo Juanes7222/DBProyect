@@ -63,8 +63,15 @@
         </div>
       </div>
         {% endfor %}
+        <input name="user" value="{{anonymous}}" class="d-none">
         <button class="btn btn-primary extra-style-button-form" type="submit">Guardar</button>
       </form>
+
+      {% if anonymous %}
+      
+      <a href="{% url "home" %}" class="btn btn-primary extra-style-button-form">Volver al inicio</a>
+
+      {% endif %}
   </div>
 </div>
   

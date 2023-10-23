@@ -22,5 +22,8 @@ urlpatterns = [
     path("get-integrations/", views.get_integrates, name="get-integrations"),
     path("view-integrations/<str:client_id>", views.view_info_user, name="view-integrations"),
     path("view-integrations/save-message/", views.save_message, name="save_message"),
+    path("request_integration/", views.request_integration_manager, name="request_integration"),
+    path("request_integration/accept/", views.request_integration_manager, name="request_integration"),
+    
     # path("get-integrations/download-zip-int", views.view_download_zip_int, name="download-zip-int"),
 ]

@@ -37,3 +37,19 @@
 .search{
   width: 40%;
 }
+
+#toast-container {
+  position: fixed;
+  bottom: 20px; /* Ajusta la distancia desde la parte inferior según tu preferencia */
+  right: 20px; /* Ajusta la distancia desde la derecha según tu preferencia */
+  z-index: 9999; /* Asegura que el toast esté por encima de otros elementos */
+}
+
+.toast {
+  width: 300px; /* Ajusta el ancho del toast según tus necesidades */
+}
+
+
+.footer{
+  margin-top: 3rem ;
+}

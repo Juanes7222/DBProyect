@@ -54,6 +54,8 @@
             </div>
           </div>
         </div>
+
+        
     </div>
   </div>
 </div>
@@ -64,9 +66,11 @@
       Fecha: {{date}}
   </div>
       <img src="/{{file}}" class="img-fluid rounded" alt="wheel of life">
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#messagemodal" data-bs-whatever="">Agregar comentario</button>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#messagemodal_{{form_id}}" data-bs-whatever="">Agregar comentario</button>
 
-<div class="modal fade" id="messagemodal" tabindex="-1" aria-labelledby="messagemodallabel" aria-hidden="true">
+      <button name="{{form_id}}" type="button" class="btn btn-primary button-message2" data-bs-toggle="modal" data-bs-target="#messagemodal2" data-bs-whatever="">Ver mensaje anterior</button>
+
+<div class="modal fade" id="messagemodal_{{form_id}}" tabindex="-1" aria-labelledby="messagemodallabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -93,20 +97,39 @@
     </div>
   </div>
 </div>
-  
   {% endfor %}
+</div>
+
+
+  <div class="modal" id="messagemodal2" tabindex="-1"  aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="title2" class="modal-title"></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p id="message-text2"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        </div>
+      </div>
+    </div>
   </div>
 
+  <div id="toast-container">
   <div class="toast" id="myToast" role="alert" aria-live="assertive" aria-atomic="true">
     <div class="toast-header">
-      <strong class="me-auto">Bootstrap</strong>
-      <small>Just now</small>
+      <strong class="me-auto">Informe</strong>
+      <small>Justo ahora</small>
       <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
     </div>
     <div class="toast-body">
-      Hello, world! This is a toast message.
+      Mensaje agregado correctamente
     </div>
   </div>
+</div>
   
   
   {% endblock content %}
