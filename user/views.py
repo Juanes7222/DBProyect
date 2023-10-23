@@ -17,12 +17,12 @@ def login_user(request):
         return redirect('dashboard')
         
     if request.method == 'GET':
-        return render(request, 'global/login.html', {"form": AuthenticationForm})
+        return render(request, 'global/login.html', {"form": AuthenticationForm()})
     else:
         user = authenticate(
             request, username=request.POST['username'], password=request.POST['password'])
         if user is None:
-            return render(request, 'global/login.html', {"form": AuthenticationForm, "error": "Nombre de usuario o contraseña incorrecto"})
+            return render(request, 'global/login.html', {"form": AuthenticationForm(), "error": "Nombre de usuario o contraseña incorrecto"})
 
         login(request, user)
         if request.user.user_type == 1:
@@ -59,8 +59,7 @@ def register(request):
 
     if request.method == 'POST':
         user_creation_form = create_user(request)
-        if user_creation_form:
-            
+        if user_creation_form.is_valid():
             user_type = user_creation_form.cleaned_data['user_type']
             user = authenticate(username=user_creation_form.cleaned_data['username'], password=user_creation_form.cleaned_data['password1'])
             login(request, user)
@@ -71,10 +70,8 @@ def register(request):
                 else:
                     create_psi(user_id=user.id)
                     return redirect("psi-dashboard")
-            else:
-                data['form'] = user_creation_form
         else:
-            data['form'] = CreateNewUser()
+            data['form'] = user_creation_form
 
     return render(request, 'global/register.html', data)
 

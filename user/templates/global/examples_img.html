@@ -4,5 +4,48 @@
 
 {% block content_blank %}
 
+<div class="container text-center">
+    <h1>Ejemplos</h1>
+
+    <!-- Carousel de Imágenes -->
+    <div id="carouselExampleIndicators" class="carousel slide">
+        <div class="carousel-indicators">
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="3" aria-label="Slide 4"></button>
+          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="4" aria-label="Slide 5"></button>
+        </div>
+        <div class="carousel-inner align-content-center">
+          <div class="carousel-item active col-md-12">
+            <img src="{% static "img/examples/1_10_2023-09-14.png" %}" class="d-block w-75" alt="Example wheel of life">
+          </div>
+          <div class="carousel-item col-md-12">
+            <img src="{% static "img/examples/1_11_2023-10-15.png" %}" class="d-block w-75" alt="Example wheel of life">
+
+          </div>
+          <div class="carousel-item col-md-12">
+            <img src="{% static "img/examples/1_12_2023-10-16.png" %}" class="d-block w-75" alt="Example wheel of life">
+
+          </div>
+          <div class="carousel-item col-md-12">
+            <img src="{% static "img/examples/1_16_2023-10-22.png" %}" class="d-block w-75" alt="Example wheel of life">
+
+          </div>
+          <div class="carousel-item col-md-12">
+            <img src="{% static "img/examples/4_14_2023-10-22.png" %}" class="d-block w-75" alt="Example wheel of life">
+
+          </div>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Siguiente</span>
+        </button>
+      </div>
+</div>
 
 {% endblock content_blank %}

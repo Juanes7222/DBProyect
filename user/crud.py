@@ -66,7 +66,7 @@ def create_user(data):
 
     if user_creation_form.is_valid():
         user_creation_form.save()
-        return user_creation_form
+    return user_creation_form
     
         
 def create_psi(**kwargs):

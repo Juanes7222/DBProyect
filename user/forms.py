@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
+from .form_ignore import BaseUserCreationForm
 from .models import UserBase
 
-class CreateNewUser(UserCreationForm):
+class CreateNewUser(BaseUserCreationForm):
  
 	class Meta:
 		model = UserBase
