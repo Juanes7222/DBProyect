@@ -16,7 +16,6 @@ $(document).ready(function() {
                 form_id: formId
             },
             success: function(response) {
-                console.log("Respuesta del servidor:", response);
                 mostrarToast()
             },
             error: function(xhr, errmsg, err) {

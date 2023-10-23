@@ -15,7 +15,6 @@ function reloadPage(files, dates){
     let imgContainer = document.getElementById("img-container")
     imgContainer.innerHTML = ""
     for (let i=0; i<files.length; i++){
-        console.log(files[i])
         let newImgElement = document.createElement("img") //, `src="{% static "${response[i]}" %}" class="img-fluid rounded" alt="wheel of life"`
         newImgElement.setAttribute("src", `/${files[i]}`)
         newImgElement.setAttribute("class", "img-fluid rounded")
@@ -44,7 +43,6 @@ function mostrarToast() {
 function showMessage(response){
     let title = document.getElementById(`title2`)
     let message = document.getElementById(`message-text2`)
-    console.log("respuesta: ", title, message)
 
     let textTitle = response["title"]
     let textMessage = response["message"]
@@ -63,11 +61,6 @@ function showMessage(response){
     title.appendChild(textContentTitle)
     message.appendChild(textContentMessage)
 
-    // let myModal = new bootstrap.Modal(document.getElementById("messagemodal2"));
-    // myModal.show();
-    
-    // addAllListeners()
-
 }
   
 
@@ -77,7 +70,6 @@ $(document).ready(function() {
         let select = document.getElementById("select-view")
         let date = new Date()
         let selectValue = parseInt(select.value)
-        console.log(selectValue)
         let dateValue
         if (selectValue == 1)
             date.setDate(date.getDate() - 7)
@@ -89,7 +81,6 @@ $(document).ready(function() {
             dateValue = "all"  
         if (dateValue != "all")
             dateValue = date.toISOString()
-        console.log(dateValue)
 
         $.ajax({
             url: "/forms_views/",
@@ -101,7 +92,6 @@ $(document).ready(function() {
             },
             success: function(response) {
                 // Manejar la respuesta del backend
-                console.log("Respuesta del servidor:", response);
                 reloadPage(response["files"], response["dates"]);
 
             },
@@ -113,7 +103,6 @@ $(document).ready(function() {
 
     $(".button-message").click(function(){
         let formId = $(this).attr("name")
-        console.log(formId)
         let title = $(`#title_${formId}`).val();
         let message = $(`#message-text_${formId}`).val();
 
@@ -128,7 +117,6 @@ $(document).ready(function() {
                 form_id: formId
             },
             success: function(response) {
-                console.log("Respuesta del servidor:", response);
                 mostrarToast()
             },
             error: function(xhr, errmsg, err) {
@@ -143,13 +131,11 @@ $(document).ready(function() {
 
     $(".button-message2").click(function(){
         let formId = $(this).attr("name")
-        console.log(formId)
 
         $.ajax({
             url: `/forms_views/get_message/${formId}`,
             method: "GET",
             success: function(response) {
-                console.log("Respuesta del servidor:", response);
                 showMessage(response)
             },
             error: function(xhr, errmsg, err) {

@@ -7,7 +7,6 @@ $(document).ready(function() {
         // Realizar una solicitud AJAX al backend
         let userId = "{{ user_id }}";
         let psiId = "{{ psi_id }}";
-        console.log(userId, psiId)
         $.ajax({
             url: "integrate/",
             method: "POST",
@@ -19,7 +18,6 @@ $(document).ready(function() {
             },
             success: function(response) {
                 // Manejar la respuesta del backend
-                console.log("Respuesta del servidor:", response);
                 let cont = document.getElementById("cont")
                 cont.innerHTML = ""
                 let newElement = document.createElement("h2")

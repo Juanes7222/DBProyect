@@ -7,10 +7,6 @@ window.addEventListener('load', function() {
     wheelLife = getWheelLifeInstance(settings);
     wheelLife.draw('wheel-life');
 
-    // if (! wheelLife.isDrawSimple) {
-    //     wheelLife.onMouseMove({offsetX: -1, offsetY: -1, type: 'click'}); // Simulate click
-    // }
-
     function windowOnResize()
     {
         wheelLife.resize();

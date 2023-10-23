@@ -43,7 +43,6 @@ def forms(request):
         return render(request, "norm_user/form.html", context)
     if not request.POST.get("exit", False):
         if request.POST.get("user", False):
-            print(request.POST)
             response = form_manager(request.POST, request.user.id, 2)
             response['Content-Disposition'] = 'attachment; filename="mi_grafico.png"'
             return response
@@ -87,7 +86,6 @@ def dashboard(request):
             "name": request.user.first_name,
             "any_form": form.exists(),
         }
-        # print(context)
         return render(request, "norm_user/dashboard.html", context=context)
     if request.POST.get("exit", False):
         return exit(request)
@@ -178,7 +176,6 @@ def view_info_user(request, client_id):
         date, user_id = tuple(info.split("_"))
         return create_zipfile(user_id, date)
     client = get_info_user(id=int(client_id))
-    # print(user_id)
     date = "all"
 
     files, dates = get_files_folder(client_id, date)
@@ -199,7 +196,6 @@ def get_integrates(request):
     if request.user.user_type == 1:
         return redirect("dashboard")
     if request.method == "POST":
-        print(request.POST)
         document = request.POST.get("document")
         if document:
             request_integration(document, request.user.id)
@@ -237,13 +233,11 @@ def request_integration_manager(request):
         save_integrate(request.user.id, int(psi_id))
     reqs = get_request(request.user.id)
     users = [(get_info_user(id=req.user_req_id), req.req_id) for req in reqs if not req.result]
-    print(users)
     users = map(lambda x: (x[0].username, x[0].id, x[1]), users)
     context = {
         "users": list(users),
         "userid": request.user.id
     }
-    print(context)
     return render(request, "norm_user/request.html", context)
     
     

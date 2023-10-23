@@ -184,7 +184,6 @@ def generate_wheel(answers, image_path):
 def create_zipfile(user_id, since_date):
     # Crear un objeto ZIP en memoria
     files = get_files_folder(user_id, since_date)[0]
-    print(files)
     files = generate_path_img_files(user_id, files, f"{media_directory}/{wheels_path}")
     files = path_normalize(files)
     buffer = io.BytesIO()
@@ -206,8 +205,6 @@ def get_users_integrate(user_id):
 
 def request_integration(document, psi_id):
     user = get_info_user(document=document)
-    # user_psi = get_info_user(id=psi_id)
-    # psi = get_info_psi(user_id=user_psi)
     save_requests_integrate(user_id_id=user.id, user_req_id=int(psi_id))
     
 
