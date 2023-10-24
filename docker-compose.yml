@@ -1,20 +1,11 @@
-version: '3'
+version: "3.8"
 
 services:
-
   web:
-      container_name: ${PROJECT_NAME}_web
-      build: .
-      working_dir: /code
-      command: python manage.py runserver 0.0.0.0:8000
-      volumes:
-        - .:/code
-      ports:
-        - '8085:8000'
-      expose:
-        - '8000'
-      links:
-        - mysql
-      networks:
-        backend:
-          ipv4_address: 192.20.0
+    build: .
+    volumes:
+      - .:/code
+    image: web:django
+    command: "sh /code/release.sh"
+    ports:
+      - "8000:8000"
