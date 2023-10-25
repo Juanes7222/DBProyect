@@ -6,28 +6,27 @@ import os
 import locale
 import zipfile
 import io
-from .crud import save_answers, get_clients, get_info_user, save_requests_integrate, get_request
-from .models import Forms, Psychologist, UserBase
-from datetime import date, timedelta, datetime
+from .crud import save_answers, get_clients, get_info_user, save_requests_integrate
+from datetime import date, timedelta
 from WheelofLife import settings
-from django.http import FileResponse, HttpResponse
+from django.http import FileResponse
 
 
 locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
 matplotlib.use('Agg')  # Usa el backend 'Agg' (modo sin GUI)
 media_directory = settings.MEDIA_ROOT
-static_directory = settings.STATIC_ROOT
+static_directory = settings.STATIC_ROOT.as_posix()
 wheels_path = "wheels"
 
 
 def get_questions():
     
-    with open(os.path.join(static_directory/"questions.json"), "r", encoding="utf-8") as file:
+    with open(os.path.join(f"{static_directory}/questions.json"), "r", encoding="utf-8") as file:
         quest = json.load(file)
     return quest.items()
 
-def generate_path_img_files(user_id, files, __path=static_directory/wheels_path):
-    __path = __path.as_posix()
+def generate_path_img_files(user_id, files, __path=f"{static_directory}/{wheels_path}"):
+    # __path = __path.as_posix()
     files = list(map(lambda x: os.path.join(__path, f"{user_id}/{x}"), files))
     # files = list(map(lambda x: __path/f"{user_id}/{x}", files))
     return files
@@ -63,8 +62,8 @@ def select_files(files: list[str], date):
 
 def get_files_folder(user_id, prov_date=None):
     try:
-        path = static_directory/f"{wheels_path}/{user_id}"
-        files = os.listdir(path.as_posix())
+        path = f"{static_directory}/{wheels_path}/{user_id}"
+        files = os.listdir(path)
         if prov_date == "all":
             return files, get_date_file(files)
         
@@ -79,7 +78,7 @@ def get_files_folder(user_id, prov_date=None):
             prov_date = date.fromisoformat(prov_date.split("T")[0])
             
         selected_files, dates = select_files(files, prov_date)
-        selected_files = path_normalize(selected_files)
+        # selected_files = path_normalize(selected_files)
         return selected_files, dates
     except FileNotFoundError:
         return None
@@ -103,8 +102,8 @@ def form_manager(answers, user_id, __case):
 
 def create_userfolder(user_id):
     # new_path = os.path.join(media_directory, wheels_path, str(user_id))
-    new_path = static_directory / wheels_path / str(user_id)
-    new_path = new_path.as_posix()
+    new_path = f"{static_directory}/{wheels_path}/{user_id}"
+    # new_path = new_path.as_posix()
     
     if not os.path.exists(new_path):
         os.makedirs(new_path)
@@ -189,8 +188,8 @@ def generate_wheel(answers, image_path):
 def create_zipfile(user_id, since_date):
     # Crear un objeto ZIP en memoria
     files = get_files_folder(user_id, since_date)[0]
-    files = generate_path_img_files(user_id, files, static_directory/{wheels_path})
-    files = path_normalize(files)
+    files = generate_path_img_files(user_id, files, f"{static_directory}/{wheels_path}")
+    # files = path_normalize(files)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED,  allowZip64=True) as zipf:
         for file in files:
