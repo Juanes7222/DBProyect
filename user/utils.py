@@ -63,7 +63,7 @@ def select_files(files: list[str], date):
 
 def get_files_folder(user_id, prov_date=None):
     try:
-        path = f"{static_directory}/{wheels_path}/{user_id}"
+        path = os.path.join(f"{static_directory}/{wheels_path}/{user_id}")
         files = os.listdir(path)
         if prov_date == "all":
             return files, get_date_file(files)
@@ -103,7 +103,7 @@ def form_manager(answers, user_id, __case):
 
 def create_userfolder(user_id):
     # new_path = os.path.join(media_directory, wheels_path, str(user_id))
-    new_path = f"{static_directory}/{wheels_path}/{user_id}"
+    new_path = os.path.join(f"{static_directory}/{wheels_path}/{user_id}")
     # new_path = new_path.as_posix()
     
     if not os.path.exists(new_path):
