@@ -25,3 +25,5 @@ RUN set -ex && \
     rm -rf /root/.cache/
 
 COPY . /code
+
+CMD /code/release.sh
