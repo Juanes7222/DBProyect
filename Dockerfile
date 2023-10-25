@@ -26,4 +26,4 @@ RUN set -ex && \
 
 COPY . /code
 
-CMD /code/release.sh
+RUN chmod +x /code/release.sh
