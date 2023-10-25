@@ -16,16 +16,17 @@ from django.http import FileResponse, HttpResponse
 locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
 matplotlib.use('Agg')  # Usa el backend 'Agg' (modo sin GUI)
 media_directory = settings.MEDIA_ROOT
+static_directory = settings.STATIC_ROOT
 wheels_path = "wheels"
 
 
 def get_questions():
     
-    with open(os.path.join("user\static\questions.json"), "r", encoding="utf-8") as file:
+    with open(os.path.join(static_directory/"questions.json"), "r", encoding="utf-8") as file:
         quest = json.load(file)
     return quest.items()
 
-def generate_path_img_files(user_id, files, __path=f"static/img/media_users/{wheels_path}"):
+def generate_path_img_files(user_id, files, __path=static_directory/wheels_path):
     files = list(map(lambda x: os.path.join(__path, f"{user_id}/{x}"), files))
     return files
 
@@ -60,7 +61,7 @@ def select_files(files: list[str], date):
 
 def get_files_folder(user_id, prov_date=None):
     try:
-        path = f"{media_directory}/{wheels_path}/{user_id}"
+        path = static_directory/wheels_path/user_id
         files = os.listdir(path)
         if prov_date == "all":
             return files, get_date_file(files)
@@ -99,7 +100,7 @@ def form_manager(answers, user_id, __case):
     generate_wheel(values, path) 
 
 def create_userfolder(user_id):
-    new_path = os.path.join(media_directory, wheels_path, str(user_id))
+    new_path = os.path.join(static_directory, wheels_path, str(user_id))
     
     if not os.path.exists(new_path):
         os.makedirs(new_path)
@@ -184,7 +185,7 @@ def generate_wheel(answers, image_path):
 def create_zipfile(user_id, since_date):
     # Crear un objeto ZIP en memoria
     files = get_files_folder(user_id, since_date)[0]
-    files = generate_path_img_files(user_id, files, f"{media_directory}/{wheels_path}")
+    files = generate_path_img_files(user_id, files, static_directory/wheels_path)
     files = path_normalize(files)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED,  allowZip64=True) as zipf:

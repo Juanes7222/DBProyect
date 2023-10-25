@@ -176,7 +176,7 @@ MEDIA_ROOT = "user/static/img/media_users"
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = 'static/'
-# STATIC_ROOT = BASE_DIR/"user/static"
+STATIC_ROOT = BASE_DIR/'assets'
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
