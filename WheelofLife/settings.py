@@ -40,6 +40,13 @@ SESSION_SAVE_EVERY_REQUEST = True  # Guarda la sesión en cada solicitud
 
 AUTH_USER_MODEL = "user.UserBase"
 
+CORS_ALLOW_ALL_ORIGINS = False
+
+CORS_ALLOWED_ORIGINS = [
+    'https://dbproject-c7r5.onrender.com',
+]
+
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -50,6 +57,7 @@ INSTALLED_APPS = [
     'user',
     'crispy_forms',
     "crispy_bootstrap5",
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
@@ -63,6 +71,7 @@ MIDDLEWARE = [
     'django.middleware.http.ConditionalGetMiddleware',
     'django.middleware.common.CommonMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'WheelofLife.urls'
@@ -100,9 +109,6 @@ DATABASES = {
 	}
 }
 
-CORS_ALLOWED_ORIGINS = [
-    'https://dbproject-c7r5.onrender.com',
-]
 
 # DATABASES = {
 #     'default': {
