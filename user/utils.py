@@ -78,7 +78,7 @@ def get_files_folder(user_id, prov_date=None):
             prov_date = date.fromisoformat(prov_date.split("T")[0])
             
         selected_files, dates = select_files(files, prov_date)
-        # selected_files = path_normalize(selected_files)
+        selected_files = path_normalize(selected_files)
         return selected_files, dates
     except FileNotFoundError:
         return None
@@ -189,7 +189,7 @@ def create_zipfile(user_id, since_date):
     # Crear un objeto ZIP en memoria
     files = get_files_folder(user_id, since_date)[0]
     files = generate_path_img_files(user_id, files, f"{static_directory}/{wheels_path}")
-    # files = path_normalize(files)
+    files = path_normalize(files)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED,  allowZip64=True) as zipf:
         for file in files:
