@@ -27,11 +27,12 @@ def get_questions():
     return quest.items()
 
 def generate_path_img_files(user_id, files, __path=static_directory/wheels_path):
-    files = list(map(lambda x: os.path.join(__path, f"{user_id}/{x}"), files))
+    # files = list(map(lambda x: os.path.join(__path, f"{user_id}/{x}"), files))
+    files = list(map(lambda x: __path/f"{user_id}/{x}"), files)
     return files
 
 def path_normalize(files):
-    new_path = list(map(lambda x: os.path.normpath(x), files))
+    new_path = list(map(lambda x: x.resolve(), files))
     return new_path
 
 def abs_path(files):
@@ -61,8 +62,8 @@ def select_files(files: list[str], date):
 
 def get_files_folder(user_id, prov_date=None):
     try:
-        path = static_directory/wheels_path/user_id
-        files = os.listdir(path)
+        path = static_directory/f"{wheels_path}/{user_id}"
+        files = os.listdir(path.as_posix())
         if prov_date == "all":
             return files, get_date_file(files)
         
@@ -100,7 +101,9 @@ def form_manager(answers, user_id, __case):
     generate_wheel(values, path) 
 
 def create_userfolder(user_id):
-    new_path = os.path.join(static_directory, wheels_path, str(user_id))
+    # new_path = os.path.join(media_directory, wheels_path, str(user_id))
+    new_path = static_directory / wheels_path / str(user_id)
+    new_path = new_path.as_posix()
     
     if not os.path.exists(new_path):
         os.makedirs(new_path)
@@ -185,7 +188,7 @@ def generate_wheel(answers, image_path):
 def create_zipfile(user_id, since_date):
     # Crear un objeto ZIP en memoria
     files = get_files_folder(user_id, since_date)[0]
-    files = generate_path_img_files(user_id, files, static_directory/wheels_path)
+    files = generate_path_img_files(user_id, files, f"{media_directory}/{wheels_path}")
     files = path_normalize(files)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED,  allowZip64=True) as zipf:
