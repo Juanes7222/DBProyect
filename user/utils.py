@@ -27,7 +27,7 @@ def get_questions():
 
 def generate_path_img_files(user_id, files, __path=f"{static_directory}/{wheels_path}"):
     # __path = __path.as_posix()
-    files = list(map(lambda x: os.path.join(__path, f"{user_id}/{x}"), files))
+    files = list(map(lambda x: f"{__path}/{user_id}/{x}", files))
     # files = list(map(lambda x: __path/f"{user_id}/{x}", files))
     return files
 

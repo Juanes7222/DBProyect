@@ -118,7 +118,8 @@ def forms_views(request):
     if info:
         return create_zipfile(request.user.id, date)
     
-    files, dates = get_files_folder(request.user.id, date)
+    info = get_files_folder(request.user.id, date)
+    files, dates = info if info else ("","")
     context = {
         "dates": dates
     }
