@@ -36,6 +36,8 @@ CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 SESSION_COOKIE_AGE = 3600  # 1h en segundos
 SESSION_SAVE_EVERY_REQUEST = True  # Guarda la sesión en cada solicitud
+CSRF_COOKIE_SECURE = True 
+CSRF_COOKIE_HTTPONLY = True
 
 
 AUTH_USER_MODEL = "user.UserBase"
@@ -44,6 +46,10 @@ CORS_ALLOW_ALL_ORIGINS = False
 
 CORS_ALLOWED_ORIGINS = [
     'https://dbproject-c7r5.onrender.com',
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://dbproject-c7r5.onrender.com',  # Agrega los dominios confiables
 ]
 
 
