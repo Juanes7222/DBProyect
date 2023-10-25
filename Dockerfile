@@ -9,6 +9,9 @@ RUN mkdir -p /code
 
 WORKDIR /code
 
+VOLUME /code/media
+
+
 #install the linux packages, since these are the dependencies of some python packages
 RUN apt-get update && apt-get install -y \
     libpq-dev \

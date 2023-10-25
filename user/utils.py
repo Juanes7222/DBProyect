@@ -16,19 +16,20 @@ locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
 matplotlib.use('Agg')  # Usa el backend 'Agg' (modo sin GUI)
 #media_directory = settings.MEDIA_ROOT
 media_directory = settings.MEDIA_ROOT
+static_directory = settings.STATIC_URL
 # media_directory = "static"
 wheels_path = "wheels"
 
 
 def get_questions():
     
-    with open(os.path.join(f"{media_directory}/questions.json"), "r", encoding="utf-8") as file:
+    with open(os.path.join(f"{static_directory}/questions.json"), "r", encoding="utf-8") as file:
         quest = json.load(file)
     return quest.items()
 
 def generate_path_img_files(user_id, files, __path=f"{media_directory}/{wheels_path}"):
     # __path = __path.as_posix()
-    files = list(map(lambda x: f"{__path}/{user_id}/{x}", files))
+    files = list(map(lambda x: os.path.join(f"{__path}/{user_id}/{x}"), files))
     # files = list(map(lambda x: __path/f"{user_id}/{x}", files))
     return files
 
