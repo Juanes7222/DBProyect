@@ -126,6 +126,7 @@ def forms_views(request):
     context["files"] = selected_files
     forms_ids = get_forms_ids(files)
     context["forms_ids"] = forms_ids
+    print(context)
         
     if request.method == "POST":
         return JsonResponse(context)

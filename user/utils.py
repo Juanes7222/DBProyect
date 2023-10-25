@@ -27,12 +27,13 @@ def get_questions():
     return quest.items()
 
 def generate_path_img_files(user_id, files, __path=static_directory/wheels_path):
-    # files = list(map(lambda x: os.path.join(__path, f"{user_id}/{x}"), files))
-    files = list(map(lambda x: __path/f"{user_id}/{x}"), files)
+    __path = __path.as_posix()
+    files = list(map(lambda x: os.path.join(__path, f"{user_id}/{x}"), files))
+    # files = list(map(lambda x: __path/f"{user_id}/{x}", files))
     return files
 
 def path_normalize(files):
-    new_path = list(map(lambda x: x.resolve(), files))
+    new_path = list(map(lambda x: os.path.normpath(x), files))
     return new_path
 
 def abs_path(files):
@@ -188,7 +189,7 @@ def generate_wheel(answers, image_path):
 def create_zipfile(user_id, since_date):
     # Crear un objeto ZIP en memoria
     files = get_files_folder(user_id, since_date)[0]
-    files = generate_path_img_files(user_id, files, f"{media_directory}/{wheels_path}")
+    files = generate_path_img_files(user_id, files, static_directory/{wheels_path})
     files = path_normalize(files)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED,  allowZip64=True) as zipf:
