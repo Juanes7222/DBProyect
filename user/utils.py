@@ -16,7 +16,7 @@ locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
 matplotlib.use('Agg')  # Usa el backend 'Agg' (modo sin GUI)
 #media_directory = settings.MEDIA_ROOT
 media_directory = settings.MEDIA_ROOT
-static_directory = settings.STATIC_URL
+static_directory = settings.STATIC_ROOT
 # media_directory = "static"
 wheels_path = "wheels"
 
