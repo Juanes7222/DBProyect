@@ -15,18 +15,18 @@ from django.http import FileResponse
 locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
 matplotlib.use('Agg')  # Usa el backend 'Agg' (modo sin GUI)
 #media_directory = settings.MEDIA_ROOT
-static_directory = settings.STATIC_ROOT
-# static_directory = "static"
+media_directory = settings.MEDIA_ROOT
+# media_directory = "static"
 wheels_path = "wheels"
 
 
 def get_questions():
     
-    with open(os.path.join(f"{static_directory}/questions.json"), "r", encoding="utf-8") as file:
+    with open(os.path.join(f"{media_directory}/questions.json"), "r", encoding="utf-8") as file:
         quest = json.load(file)
     return quest.items()
 
-def generate_path_img_files(user_id, files, __path=f"{static_directory}/{wheels_path}"):
+def generate_path_img_files(user_id, files, __path=f"{media_directory}/{wheels_path}"):
     # __path = __path.as_posix()
     files = list(map(lambda x: f"{__path}/{user_id}/{x}", files))
     # files = list(map(lambda x: __path/f"{user_id}/{x}", files))
@@ -63,7 +63,7 @@ def select_files(files: list[str], date):
 
 def get_files_folder(user_id, prov_date=None):
     try:
-        path = os.path.join(f"{static_directory}/{wheels_path}/{user_id}")
+        path = os.path.join(f"{media_directory}/{wheels_path}/{user_id}")
         files = os.listdir(path)
         if prov_date == "all":
             return files, get_date_file(files)
@@ -103,7 +103,7 @@ def form_manager(answers, user_id, __case):
 
 def create_userfolder(user_id):
     # new_path = os.path.join(media_directory, wheels_path, str(user_id))
-    new_path = os.path.join(f"{static_directory}/{wheels_path}/{user_id}")
+    new_path = os.path.join(f"{media_directory}/{wheels_path}/{user_id}")
     # new_path = new_path.as_posix()
     
     if not os.path.exists(new_path):
@@ -189,7 +189,7 @@ def generate_wheel(answers, image_path):
 def create_zipfile(user_id, since_date):
     # Crear un objeto ZIP en memoria
     files = get_files_folder(user_id, since_date)[0]
-    files = generate_path_img_files(user_id, files, f"{static_directory}/{wheels_path}")
+    files = generate_path_img_files(user_id, files, f"{media_directory}/{wheels_path}")
     files = path_normalize(files)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED,  allowZip64=True) as zipf:
