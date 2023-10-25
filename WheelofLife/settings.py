@@ -100,6 +100,9 @@ DATABASES = {
 	}
 }
 
+CORS_ALLOWED_ORIGINS = [
+    'https://dbproject-c7r5.onrender.com',
+]
 
 # DATABASES = {
 #     'default': {
