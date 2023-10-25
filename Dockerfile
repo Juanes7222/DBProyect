@@ -6,7 +6,7 @@ RUN mkdir code
 
 COPY . /code/
 
-ARG PYTHON_VERSION=3.10-slim-buster
+ARG PYTHON_VERSION=3.11.5-slim-buster
 
 ARG DEBIAN_FRONTEND=noninteractive
 
