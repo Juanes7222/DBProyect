@@ -39,6 +39,7 @@ def forms(request):
             "range": range(1, 11, 1)
             }
         if request.user.is_anonymous:
+            print(request.user.is_anonymous)
             context["anonymous"] = True
         return render(request, "norm_user/form.html", context)
     if not request.POST.get("exit", False):
