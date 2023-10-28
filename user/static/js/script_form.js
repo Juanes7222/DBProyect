@@ -69,7 +69,7 @@ function reloadPage(files, dates, formsIds){
     imgContainer.innerHTML = ""
     for (let i=0; i<files.length; i++){
         let newImgElement = document.createElement("img")
-        newImgElement.setAttribute("src", `/${files[i]}`)
+        newImgElement.setAttribute("src", `${files[i]}`)
         newImgElement.setAttribute("class", "img-fluid rounded")
         newImgElement.setAttribute("alt", "wheel of life")
 

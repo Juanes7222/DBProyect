@@ -23,8 +23,11 @@ class CreateNewUser(BaseUserCreationForm):
 		return username
 
 	def clean_document(self):
-		document = self.cleaned_data["document"]
+		document: str = self.cleaned_data["document"]
 		if UserBase.objects.filter(document=document).exists():
 			raise forms.ValidationError("Alguien con este documento ya esta registrado")
+		if not document.isnumeric():
+			raise forms.ValidationError("Debe de ser completamente numerico")
 		return document
+
 			

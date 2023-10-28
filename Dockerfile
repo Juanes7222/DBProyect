@@ -1,4 +1,3 @@
-ARG DEBIAN_FRONTEND=noninteractive
 
 FROM python:3.10
 

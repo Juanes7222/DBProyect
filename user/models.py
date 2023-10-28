@@ -34,7 +34,6 @@ class Forms(models.Model):
     message = models.TextField(max_length=200, null=True)
     message_title = models.TextField(max_length=30, null=True)
     img = models.ImageField(upload_to="wheels/", null=True)
-    img_name = models.CharField(max_length=20, null=True)
     
 class Psychologist(models.Model):
     user_id = models.BigAutoField(primary_key=True)

@@ -16,7 +16,7 @@ function reloadPage(files, dates){
     imgContainer.innerHTML = ""
     for (let i=0; i<files.length; i++){
         let newImgElement = document.createElement("img") //, `src="{% static "${response[i]}" %}" class="img-fluid rounded" alt="wheel of life"`
-        newImgElement.setAttribute("src", `/${files[i]}`)
+        newImgElement.setAttribute("src", `${files[i]}`)
         newImgElement.setAttribute("class", "img-fluid rounded")
         newImgElement.setAttribute("alt", "wheel of life")
 

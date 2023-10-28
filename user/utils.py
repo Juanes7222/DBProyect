@@ -9,8 +9,7 @@ import io
 from .crud import save_answers, get_clients, get_info_user, save_requests_integrate, get_all_forms_client
 from datetime import date, timedelta
 from WheelofLife import settings
-from django.http import FileResponse, HttpResponse
-from django.templatetags import static
+from django.http import FileResponse
 from django.core.files.base import ContentFile
 
 
@@ -19,9 +18,6 @@ matplotlib.use('Agg')  # Usa el backend 'Agg' (modo sin GUI)
 media_directory = settings.MEDIA_ROOT
 static_directory = settings.STATIC_ROOT
 wheels_path = "wheels"
-print(f"{media_directory= }\t{static_directory= }")
-
-
 
 def get_questions():
     
@@ -29,24 +25,14 @@ def get_questions():
         quest = json.load(file)
     return quest.items()
 
-def generate_path_img_files(user_id, files, __path=f"{media_directory}\{wheels_path}"):
-    # __path = __path.as_posix()
-    files = list(map(lambda x: os.path.join(f"{__path}/{user_id}/{x}"), files))
-    # files = list(map(lambda x: __path/f"{user_id}/{x}", files))
-    return files
-
 def path_normalize(files):
     new_path = list(map(lambda x: os.path.normpath(x), files))
     return new_path
 
-def abs_path(files):
-    new_path = list(map(lambda x: os.path.abspath(x), files))
-    return new_path
 
 def get_date_file(files):
     dates = []
     for file in files:
-        print(file)
         file_date = date.fromisoformat(file.split("_")[-1][:-4])
         dates.append(file_date.strftime("%A, %d de %B de %Y").title())
     return dates
@@ -93,9 +79,7 @@ def get_info_files(user_id, prov_date):
     for form in forms:
         files.append(form.img.url)
         forms_id.append(form.form_id)
-    # map(lambda x: (files.append(x.img.url), forms_id.append(x.form_id)), forms)
     files, date = get_files_client(files, prov_date)
-    print(f"{files= }\{date= }\t{forms_id= }")
     return files, date, forms_id
     
 
@@ -116,8 +100,6 @@ def form_manager(answers, user_id, __case):
     # form.img_name = img_name
     form.save()
     
-#A esto hay que cambiarle bastante, mañana no se descansa, lo que se debe de hacer es ya no obtener las imagenes de una carpeta sino de la base, por lo que muchas funciones se borran, en vez de generar carpetas se debe de generar el nombre del archivo, y que la funcion de obtener los archivos llame al crud de tal manera que obtenga los archivos especificados
-
 def get_answers(answers, user_id):
     quest = get_questions()
     score = {}
@@ -136,9 +118,7 @@ def save_answers_manager(answers):
     return form
     
 def generate_image_name(user_id, form_id):
-    # path = create_userfolder(user_id)
     specific_name = f"{user_id}_{form_id}_{date.today()}.png"
-    # image_path = f"{path}/{specific_name}.png"
     return specific_name
 
 def generate_color(blank_answers, colors, blank_colors):
@@ -196,9 +176,6 @@ def create_zipfile(user_id, since_date):
     # Crear un objeto ZIP en memoria
     forms = get_all_forms_client(user_id)
     files = map(lambda x: x.img.path, forms)
-    # files = get_files_client(user_id, since_date)[0]
-    # files = generate_path_img_files(user_id, files, f"{media_directory}/{wheels_path}")
-    # files = path_normalize(files)
     buffer = io.BytesIO()
     with zipfile.ZipFile(buffer, 'w', zipfile.ZIP_DEFLATED,  allowZip64=True) as zipf:
         for file in files:

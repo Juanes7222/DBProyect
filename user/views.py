@@ -1,12 +1,12 @@
-from .crud import create_user, create_psi, get_forms, save_integrate, search_psi, get_info_user, save_message_form, get_message_form, get_request, save_requests_integrate, update_request
+from .crud import create_user, create_psi, get_forms, save_integrate, search_psi, get_info_user, save_message_form, get_message_form, get_request, update_request
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
 from .forms import CreateNewUser
 from django.contrib.auth.forms import AuthenticationForm
-from .utils import get_questions, form_manager, get_files_client, generate_path_img_files, create_zipfile, get_users_integrate, get_forms_ids, request_integration, get_info_files
-from .decorators import backend_required
+from .utils import get_questions, form_manager, create_zipfile, get_users_integrate, request_integration, get_info_files
+# from .decorators import backend_required
 # Create your views here.
 
 def home(request):
