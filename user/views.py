@@ -5,7 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import logout, authenticate, login
 from .forms import CreateNewUser
 from django.contrib.auth.forms import AuthenticationForm
-from .utils import get_questions, form_manager, get_files_folder, generate_path_img_files, create_zipfile, get_users_integrate, get_forms_ids, request_integration
+from .utils import get_questions, form_manager, get_files_client, generate_path_img_files, create_zipfile, get_users_integrate, get_forms_ids, request_integration, get_info_files
 from .decorators import backend_required
 # Create your views here.
 
@@ -118,20 +118,21 @@ def forms_views(request):
     if info:
         return create_zipfile(request.user.id, date)
     
-    info = get_files_folder(request.user.id, date)
-    files, dates = info if info else ("","")
+    info = get_info_files(request.user.id, date)
+    files, dates, forms_ids = info if info else ("", "", "")
     context = {
         "dates": dates
     }
-    selected_files = generate_path_img_files(request.user.id, files)
-    context["files"] = selected_files
-    forms_ids = get_forms_ids(files)
+    # selected_files = generate_path_img_files(request.user.id, files)
+    context["files"] = files
+    # forms_ids = get_forms_ids(files)
     context["forms_ids"] = forms_ids
     print(context)
         
     if request.method == "POST":
         return JsonResponse(context)
-    context["zip"] = zip(selected_files, dates, forms_ids)
+    context["zip"] = zip(files, dates, forms_ids)
+    print(context)
     return render(request, "norm_user/forms_views.html", context)
 
 def examples(request):
@@ -181,17 +182,15 @@ def view_info_user(request, client_id):
     client = get_info_user(id=int(client_id))
     date = "all"
 
-    files, dates = get_files_folder(client_id, date)
-    forms_ids = get_forms_ids(files)
+    files, dates, forms_ids = get_info_files(client_id, date)
     context = {
-        "dates": dates
+        "dates": dates,
+        "files": files,
+        "zip": zip(files, dates, forms_ids)
     }
-    selected_files = generate_path_img_files(client_id, files)
-    context["files"] = selected_files
         
     context["client"] = f"{client.first_name} {client.last_name}"
     context["client_id"] = client.id
-    context["zip"] = zip(selected_files, dates, forms_ids)
     return render(request, "psi_user/view_integrations.html", context)
     
 @login_required(redirect_field_name="login", login_url="/login/")

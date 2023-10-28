@@ -91,3 +91,9 @@ def get_clients(user_id):
     
     clients = psi.clients.all()
     return clients
+
+def get_all_forms_client(user_id):
+    forms = Forms.objects.filter(user_id=user_id)
+    # print(forms)
+    # images = list(map(lambda x: x.img.path, forms))
+    return forms
