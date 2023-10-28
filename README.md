@@ -1,4 +1,4 @@
-# Construccion del proyecto
+<!-- # Construccion del proyecto
 
 Para un proceso automático solo deberá ejecutar el la imagen de Docker
 
@@ -13,7 +13,7 @@ Ejecuta el siguiente comando:
 
     docker run -it --rm -p 8000:8000 imagenWindows
 
-*Nota:* Deberá tener Docker instalado en su sistema
+*Nota:* Deberá tener Docker instalado en su sistema -->
 
 ## Manualmente
 
