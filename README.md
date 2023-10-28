@@ -47,6 +47,8 @@ En la carpeta dbproject se encuentran los datos de prueba. En caso de querer ver
 
 Tambien se genera el constructor de la base de datos. Puede ejecutar directamente el archivo migration.sql para crear toda la base de datos Mysql.
 
+>Las variables de entorno estan en el archivo *.env* en la carpeta **WheelofLife**. En este se encuentran los datos de acceso a la base de datos. No es necesario cargarlos en su computador, el programa lo hace solo; lo que debe de tener en cuenta es el usuario y la contraseña para el acceso a esta.
+
 # Notas finales:
 
 El proyecto se basa en  el framework **Django** de Python, se usa principalmente python para el manejo de todo. 
