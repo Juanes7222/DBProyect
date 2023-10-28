@@ -1,4 +1,6 @@
-<!-- # Construccion del proyecto
+# Construccion del proyecto
+
+<!-- 
 
 Para un proceso automático solo deberá ejecutar el la imagen de Docker
 
