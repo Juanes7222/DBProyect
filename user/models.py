@@ -33,6 +33,7 @@ class Forms(models.Model):
     user_id = models.ForeignKey(UserBase, on_delete=models.CASCADE)
     message = models.TextField(max_length=200, null=True)
     message_title = models.TextField(max_length=30, null=True)
+    img = models.ImageField(upload_to="wheels/", null=False)
     
 class Psychologist(models.Model):
     user_id = models.BigAutoField(primary_key=True)

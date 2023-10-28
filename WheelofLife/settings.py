@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -179,11 +181,10 @@ STATIC_URL = '/static/'
 #STATIC_ROOT = BASE_DIR / 'static'
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-#STATICFILES_DIRS=[BASE_DIR / "static",]
+STATICFILES_DIRS=[BASE_DIR / "static",]
 
 MEDIA_URL = '/media/'
-MEDIA_ROOT = '/code/media'
-
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
@@ -192,4 +193,4 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-
+# C:\Users\juanb\Documents\GitHub\DBProyect\media\wheels\1

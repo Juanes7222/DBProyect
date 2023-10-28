@@ -9,16 +9,17 @@ import io
 from .crud import save_answers, get_clients, get_info_user, save_requests_integrate
 from datetime import date, timedelta
 from WheelofLife import settings
-from django.http import FileResponse
+from django.http import FileResponse, HttpResponse
+from django.templatetags import static
 
 
 locale.setlocale(locale.LC_TIME, 'es_ES.UTF-8')
 matplotlib.use('Agg')  # Usa el backend 'Agg' (modo sin GUI)
-#media_directory = settings.MEDIA_ROOT
 media_directory = settings.MEDIA_ROOT
 static_directory = settings.STATIC_ROOT
-# media_directory = "static"
 wheels_path = "wheels"
+print(f"{media_directory= }\t{static_directory= }")
+
 
 
 def get_questions():
@@ -27,7 +28,7 @@ def get_questions():
         quest = json.load(file)
     return quest.items()
 
-def generate_path_img_files(user_id, files, __path=f"{media_directory}/{wheels_path}"):
+def generate_path_img_files(user_id, files, __path=f"{media_directory}\{wheels_path}"):
     # __path = __path.as_posix()
     files = list(map(lambda x: os.path.join(f"{__path}/{user_id}/{x}"), files))
     # files = list(map(lambda x: __path/f"{user_id}/{x}", files))
@@ -64,7 +65,8 @@ def select_files(files: list[str], date):
 
 def get_files_folder(user_id, prov_date=None):
     try:
-        path = os.path.join(f"{media_directory}/{wheels_path}/{user_id}")
+        path = os.path.join(f"{media_directory}\{wheels_path}\{user_id}")
+        print(f"Path get_files: {path}")
         files = os.listdir(path)
         if prov_date == "all":
             return files, get_date_file(files)
@@ -100,7 +102,9 @@ def form_manager(answers, user_id, __case):
     path = generate_image_path(user_id, form_id)
     values = list(score.values())
     values.pop()
-    generate_wheel(values, path) 
+    response = generate_wheel(values, path) 
+    
+#A esto hay que cambiarle bastante, mañana no se descansa, lo que se debe de hacer es ya no obtener las imagenes de una carpeta sino de la base, por lo que muchas funciones se borran, en vez de generar carpetas se debe de generar el nombre del archivo, y que la funcion de obtener los archivos llame al crud de tal manera que obtenga los archivos especificados
 
 def create_userfolder(user_id):
     # new_path = os.path.join(media_directory, wheels_path, str(user_id))
@@ -142,7 +146,7 @@ def generate_color(blank_answers, colors, blank_colors):
     return list(blank_answers)
     
 
-def generate_wheel(answers, image_path):
+def generate_wheel(answers, image_name):
 
     # Datos para el diagrama circular exterior
     labels = ['Salud', 'Economia', 'Trabajo', 'Romance', 'Crecimiento personal', 'Amigos', 'Diversion', 'Imagen propia', "Ambiente físico"]
@@ -179,12 +183,15 @@ def generate_wheel(answers, image_path):
         ax.text(center_x-(i*0.1)-0.05, center_y, str(i+1), horizontalalignment='center', verticalalignment='center', fontsize=13)
         inner_radius -= 0.1
 
-    if image_path:
-        plt.savefig(image_path, dpi=600)
+    buffer = io.BytesIO()
+    plt.savefig(buffer, dpi=600, format="png")
+    buffer.seek(0)
+    if image_name:
+        response = HttpResponse(buffer.getvalue(), content_type="image/png")
+        response["Content-Disposition"] = f"attachment; filename={image_name}.png"
+        return response
     else:
-        buffer = io.BytesIO()
         plt.savefig(buffer, format="png")
-        buffer.seek(0)
         return buffer
     
 def create_zipfile(user_id, since_date):

@@ -1,3 +1,5 @@
 # Ignore the python virtual env
 venv
 assets
+media
+staticfiles
