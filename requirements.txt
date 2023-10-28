@@ -16,10 +16,11 @@ matplotlib==3.8.0
 mysqlclient==2.2.0
 numpy==1.26.0
 packaging==23.2
-# Pillow==10.0.1
-# pyparsing==3.1.1
+Pillow==10.0.1
+pyparsing==3.1.1
 python-dateutil==2.8.2
-# pywin32==306
+python-dotenv==1.0.0
+pywin32==306
 requests==2.31.0
 six==1.16.0
 sqlparse==0.4.4
