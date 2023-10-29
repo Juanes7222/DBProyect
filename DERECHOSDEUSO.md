@@ -3,7 +3,7 @@
 ## Fecha de entrada en vigor: [28 de Octubre del 2023]
 
 ### 1. Aceptación de los Términos
-Al utilizar [Nombre de tu Proyecto] (en adelante "la Aplicación"), usted acepta los términos y condiciones establecidos en esta Declaración de Derechos de Uso. Si no está de acuerdo con estos términos, le recomendamos que no utilice la Aplicación.
+Al utilizar Rueda de la Vida (en adelante "la Aplicación"), usted acepta los términos y condiciones establecidos en esta Declaración de Derechos de Uso. Si no está de acuerdo con estos términos, le recomendamos que no utilice la Aplicación.
 
 ### 2. Derechos de Uso
 
